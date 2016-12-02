@@ -10,6 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         tv_output = (TextView)findViewById(R.id.tv_output);
 
         // Gets the URL from the UI's text field.
-        String stringUrl = "https://newsapi.org/v1/articles?source=techcrunch&apiKey=bddae599de5041ab9858c74961886e6c";
+        String stringUrl = "https://newsapi.org/v1/articles?source=bild&apiKey=bddae599de5041ab9858c74961886e6c";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -56,10 +60,6 @@ public class MainActivity extends AppCompatActivity {
                 HttpURLConnection urlConnection = null;
                 try {
                     urlConnection = (HttpURLConnection) url.openConnection();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
                     InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                     ServerResponse = readStream(in);
                     Log.e("String", ServerResponse);
@@ -77,7 +77,28 @@ public class MainActivity extends AppCompatActivity {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            tv_output.setText(result);
+
+            try{
+
+                JSONObject obj = new JSONObject(result);
+
+                //String pageName = obj.getJSONObject("articles").getString("title");
+                //tv_output.setText(pageName + "\n\n" + result);
+
+                JSONArray arr = obj.getJSONArray("articles");
+                for (int i = 0; i < arr.length(); i++)
+                {
+                    String post_title = arr.getJSONObject(i).getString("title");
+                    tv_output.setText(tv_output.getText()+ "\n\n" + post_title);
+                    String post_description = arr.getJSONObject(i).getString("description");
+                    tv_output.setText(tv_output.getText()+ "\n\n" + post_description);
+
+                }
+
+            }catch (JSONException e){
+
+                tv_output.setText(e.getMessage());
+            }
         }
     }
 
