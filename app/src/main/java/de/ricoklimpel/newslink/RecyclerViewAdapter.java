@@ -1,6 +1,8 @@
 package de.ricoklimpel.newslink;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,17 +12,18 @@ import android.widget.TextView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    String[] SubjectValues;
+    String[] TitleValues;
     String[] DescriptionValues;
+    String[] Links;
     Context context;
     View view1;
     ViewHolder viewHolder1;
-    TextView textView;
 
-    public RecyclerViewAdapter(Context context1, String[] SubjectValues1, String[] DescriptionValues) {
+    public RecyclerViewAdapter(Context context1, String[] SubjectValues1, String[] DescriptionValues, String[] Links) {
 
+        this.Links = Links;
         this.DescriptionValues = DescriptionValues;
-        this.SubjectValues = SubjectValues1;
+        this.TitleValues = SubjectValues1;
         this.context = context1;
     }
 
@@ -49,16 +52,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        holder.textView.setText(SubjectValues[position]);
+        holder.textView.setText(TitleValues[position]);
         holder.tvDescription.setText(DescriptionValues[position]);
+
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.openWebrowser(Links[position]);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
 
-        return SubjectValues.length;
+        return TitleValues.length;
     }
 }
 

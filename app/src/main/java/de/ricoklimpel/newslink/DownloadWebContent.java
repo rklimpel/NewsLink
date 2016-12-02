@@ -55,7 +55,8 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
 
         MainActivity.initRecyclerView(JSONHandling.ArrayfromJSONString(result,"title"),
-                JSONHandling.ArrayfromJSONString(result,"description"));
+                JSONHandling.ArrayfromJSONString(result,"description"),
+                JSONHandling.ArrayfromJSONString(result,"url"));
 
     }
 
