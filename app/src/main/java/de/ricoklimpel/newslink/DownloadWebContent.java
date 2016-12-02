@@ -1,20 +1,12 @@
 package de.ricoklimpel.newslink;
 
 import android.os.AsyncTask;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import static de.ricoklimpel.newslink.R.id.title;
-import static de.ricoklimpel.newslink.R.id.tv_output;
 
 /**
  * Created by ricoklimpel on 02.12.16.
@@ -50,13 +42,13 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
         }
     }
 
-    // onPostExecute displays the results of the AsyncTask.
     @Override
     protected void onPostExecute(String result) {
 
         MainActivity.initRecyclerView(JSONHandling.ArrayfromJSONString(result,"title"),
                 JSONHandling.ArrayfromJSONString(result,"description"),
-                JSONHandling.ArrayfromJSONString(result,"url"));
+                JSONHandling.ArrayfromJSONString(result,"url"),
+                JSONHandling.ArrayfromJSONString(result,"urlToImage"));
 
     }
 

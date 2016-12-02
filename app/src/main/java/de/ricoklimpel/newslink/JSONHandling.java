@@ -1,13 +1,8 @@
 package de.ricoklimpel.newslink;
 
-import android.support.annotation.ArrayRes;
-import android.support.annotation.VisibleForTesting;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static de.ricoklimpel.newslink.R.id.tv_output;
 
 /**
  * Created by ricoklimpel on 02.12.16.

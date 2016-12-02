@@ -6,27 +6,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void initRecyclerView(String[] content, String[] description,String[] links) {
+    public static void initRecyclerView(String[] content, String[] description,String[] links,String[] imageURLs) {
 
-        recyclerViewAdapter = new RecyclerViewAdapter(context, content,description,links);
+        recyclerViewAdapter = new NewsRecycleAdapter(context, content,description,links,imageURLs);
 
         recyclerView.setAdapter(recyclerViewAdapter);
 
