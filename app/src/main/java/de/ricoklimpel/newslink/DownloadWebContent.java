@@ -1,6 +1,8 @@
 package de.ricoklimpel.newslink;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,8 +25,9 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
      *
      * ID = 0 : MainActivity
      * ID = 1 : SidemnuFragment
+     * ID = 999: no CallerID
      */
-    int CallerID;
+    public int CallerID;
 
 
     /**
@@ -38,7 +41,12 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... urls) {
 
-        CallerID = Integer.getInteger(urls[1]);
+        CallerID = 999;
+
+        if(urls[1]!=null){
+            CallerID = Integer.parseInt(urls[1]);
+        }
+        Log.e("CallerID",String.valueOf(CallerID));
 
         // params comes from the execute() call: params[0] is the url.
         try {
@@ -79,6 +87,9 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
                     break;
                 case 1 :
                     SidemenuFragment.onPostDownload(result);
+                    break;
+                default:
+                    //No CallerID
                     break;
             }
         }else{

@@ -22,6 +22,8 @@ public class SidemenuFragment extends MenuFragment {
     static RecyclerView.LayoutManager recylerViewLayoutManager;
     static View view;
 
+    final String CALLER_ID = "1";
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +32,7 @@ public class SidemenuFragment extends MenuFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.sidemenuFragment, container,
+        view = inflater.inflate(R.layout.sidemenu_fragment, container,
                 false);
 
 
@@ -39,7 +41,7 @@ public class SidemenuFragment extends MenuFragment {
         recyclerView.setLayoutManager(recylerViewLayoutManager);
 
         final String stringUrl = "https://newsapi.org/v1/sources?language=";
-        new DownloadWebContent().execute(stringUrl);
+        new DownloadWebContent().execute(stringUrl,CALLER_ID);
 
         return  setupReveal(view) ;
     }
@@ -59,9 +61,10 @@ public class SidemenuFragment extends MenuFragment {
      */
     public static void onPostDownload(String downloadData){
 
-        String[] Title = JSONHandling.ArrayfromJSONString(downloadData,"sources","name");
+        recyclerViewAdapter = new SourcesRecycleAdapter(view.getContext(),
+                JSONHandling.ArrayfromJSONString(downloadData,"sources","name"),
+                JSONHandling.ArrayfromJSONString(downloadData,"sources","urlsToLogos","small"));
 
-        recyclerViewAdapter = new SourcesRecycleAdapter(view.getContext(), Title);
         recyclerView.setAdapter(recyclerViewAdapter);
     }
 

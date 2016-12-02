@@ -1,5 +1,7 @@
 package de.ricoklimpel.newslink;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,14 +29,43 @@ public class JSONHandling {
         try {
 
             JSONObject obj = new JSONObject(string);
-            //String pageName = obj.getJSONObject("articles").getString("title");
-            //tv_output.setText(pageName + "\n\n" + result);
-
             JSONArray arr = obj.getJSONArray(value1);
             subjects = new String[arr.length()];
 
             for (int i = 0; i < arr.length(); i++) {
                 subjects[i] = arr.getJSONObject(i).getString(value2);
+            }
+
+        } catch (JSONException e) {
+
+        }
+
+        return subjects;
+    }
+
+    /**
+     *
+     * Same Mathod as above, but one element deeper in JSON structure
+     *
+     * @param string
+     * @param value1
+     * @param value2
+     * @param value3
+     * @return
+     */
+    public static String[] ArrayfromJSONString(String string,String value1 ,String value2, String value3) {
+
+        String[] subjects = new String[0];
+
+        try {
+
+            JSONObject obj = new JSONObject(string);
+            JSONArray arr = obj.getJSONArray(value1);
+            subjects = new String[arr.length()];
+
+            for (int i = 0; i < arr.length(); i++) {
+                subjects[i] = arr.getJSONObject(i).getJSONObject(value2).getString(value3);
+                Log.e(i + "",subjects[i]);
             }
 
         } catch (JSONException e) {
@@ -57,13 +88,11 @@ public class JSONHandling {
         try {
             JSONObject obj = new JSONObject(json);
             status = obj.getString("status");
-
         } catch (JSONException e) {
-
 
         }
 
-        return status == "ok";
+        return (status.contains("ok"));
     }
 
 }

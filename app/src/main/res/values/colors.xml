@@ -8,5 +8,6 @@
     <color name="mainBackground">#212121</color>
     <color name="titleText">#FF8F00</color>
     <color name="secondaryText">#bdbdbd</color>
+    <color name="auswahl">#e0e0e0</color>
 
 </resources>

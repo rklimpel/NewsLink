@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:weightSum="10"
+    android:padding="10dp"
+    android:id="@+id/linearlayout_sourcesItem">
 
     <TextView
         android:id="@+id/sources_textview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="9"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_gravity="left"
+        android:layout_gravity="center"
         android:textSize="18dp"
         android:textStyle="normal"
         />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_weight="1"
+        android:id="@+id/iv_sourcelgo"/>
+
 
 </LinearLayout>

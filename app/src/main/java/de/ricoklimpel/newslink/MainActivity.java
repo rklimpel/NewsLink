@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     // Gets the URL from the UI's text field.
     final String stringUrl = "https://newsapi.org/v1/articles?source=spiegel-online&apiKey=bddae599de5041ab9858c74961886e6c";
 
+    final String CALLER_ID = "0";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         //If Network is Ok first time download news list
         if(checkNetwork()){
-            new DownloadWebContent().execute(stringUrl);
+            new DownloadWebContent().execute(stringUrl,CALLER_ID);
         }else{
             Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
         }
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
                 @Override public void onRefresh() {
 
-                    new DownloadWebContent().execute(stringUrl,"1");
+                    new DownloadWebContent().execute(stringUrl,CALLER_ID);
 
                 }
             });
