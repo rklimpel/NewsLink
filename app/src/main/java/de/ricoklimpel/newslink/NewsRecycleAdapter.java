@@ -58,13 +58,16 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
+        //Set Title
         holder.textView.setText(TitleValues[position]);
 
+        //Set Image
         Picasso.with(context).load(imageURLs[position]).into(holder.ivNewsImage);
-        //Picasso.with(context).load(url).centerCrop().fit().into(iv);
 
+        //Set Description
         holder.tvDescription.setText(DescriptionValues[position]);
 
+        //Set OnClick Listeners for WebView
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

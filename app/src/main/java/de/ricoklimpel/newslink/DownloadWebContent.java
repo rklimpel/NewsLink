@@ -14,16 +14,36 @@ import java.net.URL;
 
 class DownloadWebContent extends AsyncTask<String, Void, String> {
 
-    String ServerResponse;
-    URL url;
 
+    String ServerResponse;
+
+    /**
+     * Caller ID is the argument on index [1] in the urls argument
+     * used to tell onPostExecute the class he should return to
+     *
+     * ID = 0 : MainActivity
+     * ID = 1 : SidemnuFragment
+     */
+    int CallerID;
+
+
+    /**
+     *
+     *Download Task in Background,
+     *Calls the API with URL from Argument
+     *
+     * @param urls
+     * @return
+     */
     @Override
     protected String doInBackground(String... urls) {
+
+        CallerID = Integer.getInteger(urls[1]);
 
         // params comes from the execute() call: params[0] is the url.
         try {
 
-            url = new URL(urls[0]);
+            URL url = new URL(urls[0]);
 
             HttpURLConnection urlConnection = null;
             try {
@@ -38,31 +58,42 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
             return ServerResponse;
 
         } catch (IOException e) {
+
             return "Unable to retrieve web page. URL may be invalid.";
         }
     }
 
 
+    /**
+     * Called after finishing download Task
+     *
+     * @param result
+     */
     @Override
     protected void onPostExecute(String result) {
 
-        if(url.toString().contains("articles")){
-            MainActivity.mWaveSwipeRefreshLayout.setRefreshing(false);
-
-            MainActivity.initRecyclerView(JSONHandling.ArrayfromJSONString(result,"articles","title"),
-                    JSONHandling.ArrayfromJSONString(result,"articles" ,"description"),
-                    JSONHandling.ArrayfromJSONString(result,"articles","url"),
-                    JSONHandling.ArrayfromJSONString(result,"articles","urlToImage"));
+        if (JSONHandling.checkAPIStatus(result)){
+            switch (CallerID){
+                case 0 :
+                    MainActivity.onPostDownload(result);
+                    break;
+                case 1 :
+                    SidemenuFragment.onPostDownload(result);
+                    break;
+            }
         }else{
-
-            BlankFragment.onPostDownload(result);
-
+            //ERROR
         }
-
-
 
     }
 
+    /**
+     *
+     * Input Stream Reader for http url connection
+     *
+     * @param is
+     * @return
+     */
     private String readStream(InputStream is) {
         try {
             ByteArrayOutputStream bo = new ByteArrayOutputStream();
@@ -73,7 +104,7 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
             }
             return bo.toString();
         } catch (IOException e) {
-            return "";
+            return "could not read URL Stream";
         }
     }
 }

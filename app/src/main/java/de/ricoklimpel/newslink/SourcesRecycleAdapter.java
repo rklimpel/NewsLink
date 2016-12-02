@@ -49,6 +49,8 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
+        //Set Source Name
         holder.textView.setText(TitleValues[position]);
     }
 

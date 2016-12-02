@@ -12,8 +12,12 @@ public class JSONHandling {
 
     /**
      *
+     * Formats specific Parts of the whole JSON Text file to String Arrays,
+     * e.g. alle News Titles or alle News Descriptions
+     *
      * @param string the hole string with json data
-     * @param value Posible values are for example title or description
+     * @param value1 First Tree Element in JSON Strukture
+     * @param value2 Second Tree Element in JSON Strukture
      * @return array of elements value
      */
     public static String[] ArrayfromJSONString(String string,String value1 ,String value2) {
@@ -38,6 +42,28 @@ public class JSONHandling {
         }
 
         return subjects;
+    }
+
+    /**
+     *
+     * Check API, if there has been an http request api Error it return error instead of ok
+     *
+     * @param json
+     * @return true for ok, false for error
+     */
+    public static Boolean checkAPIStatus(String json) {
+
+        String status = null;
+        try {
+            JSONObject obj = new JSONObject(json);
+            status = obj.getString("status");
+
+        } catch (JSONException e) {
+
+
+        }
+
+        return status == "ok";
     }
 
 }
