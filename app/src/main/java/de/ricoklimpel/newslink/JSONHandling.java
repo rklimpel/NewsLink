@@ -15,7 +15,13 @@ import static de.ricoklimpel.newslink.R.id.tv_output;
 
 public class JSONHandling {
 
-    public static String[] ArrayfromJSONString(String string) {
+    /**
+     *
+     * @param string the hole string with json data
+     * @param value Posible values are for example title or description
+     * @return array of elements value
+     */
+    public static String[] ArrayfromJSONString(String string,String value) {
 
         String[] subjects = new String[0];
 
@@ -30,7 +36,7 @@ public class JSONHandling {
             subjects = new String[arr.length()];
 
             for (int i = 0; i < arr.length(); i++) {
-                subjects[i] = arr.getJSONObject(i).getString("title");
+                subjects[i] = arr.getJSONObject(i).getString(value);
             }
 
         } catch (JSONException e) {

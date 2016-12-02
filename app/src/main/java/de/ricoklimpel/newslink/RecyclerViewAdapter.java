@@ -11,25 +11,29 @@ import android.widget.TextView;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     String[] SubjectValues;
+    String[] DescriptionValues;
     Context context;
     View view1;
     ViewHolder viewHolder1;
     TextView textView;
 
-    public RecyclerViewAdapter(Context context1, String[] SubjectValues1) {
+    public RecyclerViewAdapter(Context context1, String[] SubjectValues1, String[] DescriptionValues) {
 
-        SubjectValues = SubjectValues1;
-        context = context1;
+        this.DescriptionValues = DescriptionValues;
+        this.SubjectValues = SubjectValues1;
+        this.context = context1;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textView;
+        public TextView tvDescription;
 
         public ViewHolder(View v) {
 
             super(v);
 
+            tvDescription = (TextView)v.findViewById(R.id.description_textview);
             textView = (TextView) v.findViewById(R.id.subject_textview);
         }
     }
@@ -48,6 +52,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         holder.textView.setText(SubjectValues[position]);
+        holder.tvDescription.setText(DescriptionValues[position]);
     }
 
     @Override

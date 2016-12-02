@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static de.ricoklimpel.newslink.R.id.title;
 import static de.ricoklimpel.newslink.R.id.tv_output;
 
 /**
@@ -53,7 +54,8 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
 
-        MainActivity.initRecyclerView(JSONHandling.ArrayfromJSONString(result));
+        MainActivity.initRecyclerView(JSONHandling.ArrayfromJSONString(result,"title"),
+                JSONHandling.ArrayfromJSONString(result,"description"));
 
     }
 

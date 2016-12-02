@@ -56,12 +56,14 @@ public class MainActivity extends AppCompatActivity {
         tv_output = (TextView) findViewById(R.id.tv_output);
 
         // Gets the URL from the UI's text field.
-        String stringUrl = "https://newsapi.org/v1/articles?source=bild&apiKey=bddae599de5041ab9858c74961886e6c";
+        String stringUrl = "https://newsapi.org/v1/articles?source=bbc-sport&apiKey=bddae599de5041ab9858c74961886e6c";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
+
             new DownloadWebContent().execute(stringUrl);
+
         } else {
             Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
         }
@@ -69,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void initRecyclerView(String[] content) {
+    public static void initRecyclerView(String[] content, String[] description) {
 
-        recyclerViewAdapter = new RecyclerViewAdapter(context, content);
+        recyclerViewAdapter = new RecyclerViewAdapter(context, content,description);
 
         recyclerView.setAdapter(recyclerViewAdapter);
 
