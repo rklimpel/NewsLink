@@ -48,6 +48,7 @@ public class SidemenuFragment extends MenuFragment {
 
     public void onOpenMenu(){
 
+
     }
 
     public void onCloseMenu(){

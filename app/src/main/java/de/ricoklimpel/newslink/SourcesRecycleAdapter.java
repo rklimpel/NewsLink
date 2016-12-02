@@ -22,13 +22,15 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
     String[] TitleValues;
     String[] logoURLS;
 
+    final String PREFSNAME = "checkedSources";
+
     /**
      * saves which sources are checked and which aren'T
      * 0 = not set
      * 1 = checked
      *
      */
-    Boolean[] checkSources;
+    Boolean[] checkedSources;
 
     Context context;
     View view1;
@@ -39,9 +41,12 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         this.TitleValues = SubjectValues1;
         this.context = context1;
 
-        this.checkSources = new Boolean[getItemCount()];
-        for (int i = 0; i < checkSources.length; i++) {
-            checkSources[i] = false;
+
+        String[] saveArray = LocalStorage.loadArray(PREFSNAME,context);
+        checkedSources = new Boolean[saveArray.length];
+        for (int i = 0; i < saveArray.length; i++) {
+            if(saveArray[i].equals("0"))checkedSources[i]=false;
+            if(saveArray[i].equals("1"))checkedSources[i]=true;
         }
 
     }
@@ -81,7 +86,8 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         Picasso.with(context).load(logoURLS[position]).into(holder.iv_logo);
 
 
-        
+        if(checkedSources[position])holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.auswahl));
+
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,13 +111,21 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
 
     private void checkSources(int position, final ViewHolder holder){
 
-        if(!checkSources[position]){
+        if(!checkedSources[position]){
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.auswahl));
-            checkSources[position]=true;
+            checkedSources[position]=true;
         }else{
             holder.linearLayout.setBackgroundColor(Color.WHITE);
-            checkSources[position]=false;
+            checkedSources[position]=false;
         }
+
+
+        String[] saveArray = new String[checkedSources.length];
+        for (int i = 0; i < checkedSources.length; i++) {
+            if(checkedSources[i])saveArray[i]="1";
+            if(!checkedSources[i])saveArray[i]="0";
+        }
+        LocalStorage.saveArray(saveArray,PREFSNAME,context);
     }
 
 
