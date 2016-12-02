@@ -2,7 +2,6 @@ package de.ricoklimpel.newslink;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +49,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     @Override
     public NewsRecycleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        view1 = LayoutInflater.from(context).inflate(R.layout.recyclerview_items, parent, false);
+        view1 = LayoutInflater.from(context).inflate(R.layout.news_recycler_items, parent, false);
         viewHolder1 = new ViewHolder(view1);
 
         return viewHolder1;

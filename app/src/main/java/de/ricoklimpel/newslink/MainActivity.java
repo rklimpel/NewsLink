@@ -3,18 +3,20 @@ package de.ricoklimpel.newslink;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mxn.soul.flowingdrawer_core.FlowingView;
+import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
@@ -42,6 +44,17 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(recylerViewLayoutManager);
 
         tv_output = (TextView) findViewById(R.id.tv_output);
+
+
+        LeftDrawerLayout mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
+        FragmentManager fm = getSupportFragmentManager();
+        BlankFragment mMenuFragment = (BlankFragment) fm.findFragmentById(R.id.id_container_menu);
+        FlowingView mFlowingView = (FlowingView) findViewById(R.id.sv);
+        if (mMenuFragment == null) {
+            fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new BlankFragment()).commit();
+        }
+        mLeftDrawerLayout.setFluidView(mFlowingView);
+        mLeftDrawerLayout.setMenuFragment(mMenuFragment);
 
         // Gets the URL from the UI's text field.
         final String stringUrl = "https://newsapi.org/v1/articles?source=spiegel-online&apiKey=bddae599de5041ab9858c74961886e6c";

@@ -16,7 +16,7 @@ public class JSONHandling {
      * @param value Posible values are for example title or description
      * @return array of elements value
      */
-    public static String[] ArrayfromJSONString(String string,String value) {
+    public static String[] ArrayfromJSONString(String string,String value1 ,String value2) {
 
         String[] subjects = new String[0];
 
@@ -26,11 +26,11 @@ public class JSONHandling {
             //String pageName = obj.getJSONObject("articles").getString("title");
             //tv_output.setText(pageName + "\n\n" + result);
 
-            JSONArray arr = obj.getJSONArray("articles");
+            JSONArray arr = obj.getJSONArray(value1);
             subjects = new String[arr.length()];
 
             for (int i = 0; i < arr.length(); i++) {
-                subjects[i] = arr.getJSONObject(i).getString(value);
+                subjects[i] = arr.getJSONObject(i).getString(value2);
             }
 
         } catch (JSONException e) {

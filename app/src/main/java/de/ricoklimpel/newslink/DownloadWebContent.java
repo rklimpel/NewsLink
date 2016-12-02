@@ -15,6 +15,7 @@ import java.net.URL;
 class DownloadWebContent extends AsyncTask<String, Void, String> {
 
     String ServerResponse;
+    URL url;
 
     @Override
     protected String doInBackground(String... urls) {
@@ -22,14 +23,13 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
         // params comes from the execute() call: params[0] is the url.
         try {
 
-            URL url = new URL(urls[0]);
+            url = new URL(urls[0]);
 
             HttpURLConnection urlConnection = null;
             try {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 ServerResponse = readStream(in);
-                //Log.e("String", ServerResponse);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -42,15 +42,25 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
         }
     }
 
+
     @Override
     protected void onPostExecute(String result) {
 
-        MainActivity.mWaveSwipeRefreshLayout.setRefreshing(false);
+        if(url.toString().contains("articles")){
+            MainActivity.mWaveSwipeRefreshLayout.setRefreshing(false);
 
-        MainActivity.initRecyclerView(JSONHandling.ArrayfromJSONString(result,"title"),
-                JSONHandling.ArrayfromJSONString(result,"description"),
-                JSONHandling.ArrayfromJSONString(result,"url"),
-                JSONHandling.ArrayfromJSONString(result,"urlToImage"));
+            MainActivity.initRecyclerView(JSONHandling.ArrayfromJSONString(result,"articles","title"),
+                    JSONHandling.ArrayfromJSONString(result,"articles" ,"description"),
+                    JSONHandling.ArrayfromJSONString(result,"articles","url"),
+                    JSONHandling.ArrayfromJSONString(result,"articles","urlToImage"));
+        }else{
+
+            BlankFragment.onPostDownload(result);
+
+        }
+
+
+
     }
 
     private String readStream(InputStream is) {
@@ -67,3 +77,5 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
         }
     }
 }
+
+
