@@ -9,3 +9,9 @@
 .externalNativeBuild
 
 .idea/vcs.xml
+
+.idea/statistic.xml
+
+.idea/inspectionProfiles/profiles_settings.xml
+
+.idea/inspectionProfiles/Project_Default.xml

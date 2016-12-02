@@ -45,11 +45,12 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
 
+        MainActivity.mWaveSwipeRefreshLayout.setRefreshing(false);
+
         MainActivity.initRecyclerView(JSONHandling.ArrayfromJSONString(result,"title"),
                 JSONHandling.ArrayfromJSONString(result,"description"),
                 JSONHandling.ArrayfromJSONString(result,"url"),
                 JSONHandling.ArrayfromJSONString(result,"urlToImage"));
-
     }
 
     private String readStream(InputStream is) {

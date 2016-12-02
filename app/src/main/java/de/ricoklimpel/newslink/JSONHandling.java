@@ -23,7 +23,6 @@ public class JSONHandling {
         try {
 
             JSONObject obj = new JSONObject(string);
-
             //String pageName = obj.getJSONObject("articles").getString("title");
             //tv_output.setText(pageName + "\n\n" + result);
 

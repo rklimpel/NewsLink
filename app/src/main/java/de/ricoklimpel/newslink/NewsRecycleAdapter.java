@@ -51,7 +51,6 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     public NewsRecycleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         view1 = LayoutInflater.from(context).inflate(R.layout.recyclerview_items, parent, false);
-
         viewHolder1 = new ViewHolder(view1);
 
         return viewHolder1;
@@ -64,7 +63,6 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
 
         Picasso.with(context).load(imageURLs[position]).into(holder.ivNewsImage);
         //Picasso.with(context).load(url).centerCrop().fit().into(iv);
-
 
         holder.tvDescription.setText(DescriptionValues[position]);
 
@@ -80,9 +78,6 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
                 MainActivity.openWebrowser(Links[position]);
             }
         });
-
-
-
     }
 
     @Override
