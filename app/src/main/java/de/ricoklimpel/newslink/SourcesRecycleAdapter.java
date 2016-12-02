@@ -41,13 +41,16 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         this.TitleValues = SubjectValues1;
         this.context = context1;
 
-
-        String[] saveArray = LocalStorage.loadArray(PREFSNAME,context);
-        checkedSources = new Boolean[saveArray.length];
-        for (int i = 0; i < saveArray.length; i++) {
-            if(saveArray[i].equals("0"))checkedSources[i]=false;
-            if(saveArray[i].equals("1"))checkedSources[i]=true;
+        checkedSources = new Boolean[TitleValues.length];
+        for (int i = 0; i < checkedSources.length; i++) {
+            checkedSources[i]=false;
         }
+
+        //Save Checked Items to Shared Preferences
+        LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),PREFSNAME,context);
+
+        //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
+        checkedSources = LocalStorage.StringToBoolArray(LocalStorage.loadArray(PREFSNAME,context));
 
     }
 
@@ -86,8 +89,16 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         Picasso.with(context).load(logoURLS[position]).into(holder.iv_logo);
 
 
+        //Set checked if Arrays had saved checkd state
         if(checkedSources[position])holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.auswahl));
 
+
+        /**
+         *
+         * On Click Listener for set checked
+         * sits on all elements because it should be able to click everywhere  to save the state
+         *
+         */
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +120,13 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
 
     }
 
+    /**
+     *
+     * Check if a NewsSource is already checked, if yes uncheck it, else check it
+     *
+     * @param position
+     * @param holder
+     */
     private void checkSources(int position, final ViewHolder holder){
 
         if(!checkedSources[position]){
@@ -119,16 +137,16 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
             checkedSources[position]=false;
         }
 
-
-        String[] saveArray = new String[checkedSources.length];
-        for (int i = 0; i < checkedSources.length; i++) {
-            if(checkedSources[i])saveArray[i]="1";
-            if(!checkedSources[i])saveArray[i]="0";
-        }
-        LocalStorage.saveArray(saveArray,PREFSNAME,context);
+        //Save Checked Items to Shared Preferences
+        LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),PREFSNAME,context);
     }
 
-
+    /**
+     *
+     * get Recyclerview Items (length)
+     *
+     * @return
+     */
     @Override
     public int getItemCount() {
 
