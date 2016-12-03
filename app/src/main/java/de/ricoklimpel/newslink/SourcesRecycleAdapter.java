@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import com.squareup.picasso.Picasso;
  * Created by ricoklimpel on 02.12.16.
  */
 
-public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAdapter.ViewHolder>{
+public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAdapter.ViewHolder> {
 
     String[] TitleValues;
     String[] logoURLS;
@@ -28,7 +29,6 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
      * saves which sources are checked and which aren'T
      * 0 = not set
      * 1 = checked
-     *
      */
     Boolean[] checkedSources;
 
@@ -41,16 +41,18 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         this.TitleValues = SubjectValues1;
         this.context = context1;
 
+        checkedSources = null;
+
         //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
-        checkedSources = LocalStorage.StringToBoolArray(LocalStorage.loadArray(PREFSNAME,context));
-        if(checkedSources[0]==null){
+        checkedSources = LocalStorage.StringToBoolArray(LocalStorage.loadArray(PREFSNAME, context));
+        if (checkedSources.length == 0) {
             //If there is no data saved in shared preferences init first dataset:
             checkedSources = new Boolean[TitleValues.length];
             for (int i = 0; i < checkedSources.length; i++) {
-                checkedSources[i]=false;
+                checkedSources[i] = false;
             }
             //Save Checked Items to Shared Preferences
-            LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),PREFSNAME,context);
+            LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources), PREFSNAME, context);
         }
 
     }
@@ -67,7 +69,7 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
 
             iv_logo = (ImageView) v.findViewById(R.id.iv_sourcelgo);
             textView = (TextView) v.findViewById(R.id.sources_textview);
-            linearLayout = (LinearLayout)v.findViewById(R.id.linearlayout_sourcesItem);
+            linearLayout = (LinearLayout) v.findViewById(R.id.linearlayout_sourcesItem);
         }
     }
 
@@ -91,7 +93,7 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
 
 
         //Set checked if Arrays had saved checkd state
-        if(checkedSources[position])holder.linearLayout.setBackgroundColor(
+        if (checkedSources[position]) holder.linearLayout.setBackgroundColor(
                 context.getResources().getColor(R.color.auswahl));
 
 
@@ -104,47 +106,45 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkSources(position,holder);
+                checkSources(position, holder);
             }
         });
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkSources(position,holder);
+                checkSources(position, holder);
             }
         });
         holder.iv_logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkSources(position,holder);
+                checkSources(position, holder);
             }
         });
 
     }
 
     /**
-     *
      * Check if a NewsSource is already checked, if yes uncheck it, else check it
      *
      * @param position
      * @param holder
      */
-    private void checkSources(int position, final ViewHolder holder){
+    private void checkSources(int position, final ViewHolder holder) {
 
-        if(!checkedSources[position]){
+        if (!checkedSources[position]) {
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.auswahl));
-            checkedSources[position]=true;
-        }else{
+            checkedSources[position] = true;
+        } else {
             holder.linearLayout.setBackgroundColor(Color.WHITE);
-            checkedSources[position]=false;
+            checkedSources[position] = false;
         }
 
         //Save Checked Items to Shared Preferences
-        LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),PREFSNAME,context);
+        LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources), PREFSNAME, context);
     }
 
     /**
-     *
      * get Recyclerview Items (length)
      *
      * @return

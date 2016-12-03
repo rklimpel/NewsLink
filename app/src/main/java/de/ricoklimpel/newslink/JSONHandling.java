@@ -65,7 +65,6 @@ public class JSONHandling {
 
             for (int i = 0; i < arr.length(); i++) {
                 subjects[i] = arr.getJSONObject(i).getJSONObject(value2).getString(value3);
-                Log.e(i + "",subjects[i]);
             }
 
         } catch (JSONException e) {

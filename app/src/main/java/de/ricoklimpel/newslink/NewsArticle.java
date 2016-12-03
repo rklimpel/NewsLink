@@ -130,16 +130,18 @@ public class NewsArticle implements Comparable<NewsArticle>{
      */
     @Override
     public int compareTo(NewsArticle other) {
-
-        Log.e("other ",""+other.getDatetimestamp());
-        Log.e("this " ,""+this.getDatetimestamp());
-
         try {
-            return (this.getDatetimestamp().before(other.getDatetimestamp()) ? -1 :
-                    (this.getDatetimestamp() == other.getDatetimestamp() ? 0 : 1));
+
+            if(this.getDatetimestamp().before(other.getDatetimestamp())){
+                return -1;
+            }else if(this.getDatetimestamp().after(other.getDatetimestamp())){
+                return 1;
+            }else if(this.getDatetimestamp().equals(other.getDatetimestamp())){
+                return 1;
+            }else return 1;
 
         }catch(NullPointerException e){
-            Log.e("compare to News Acticle",e.getMessage());
+            Log.e("compare news Articles",e.getMessage());
             return 1;
         }
     }

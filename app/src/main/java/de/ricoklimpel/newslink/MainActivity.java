@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.mxn.soul.flowingdrawer_core.FlowingView;
@@ -17,10 +18,13 @@ import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 import static de.ricoklimpel.newslink.SourcesRecycleAdapter.PREFSNAME;
+import static de.ricoklimpel.newslink.DownloadWebContent.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,38 +41,10 @@ public class MainActivity extends AppCompatActivity {
     static RecyclerView.LayoutManager recylerViewLayoutManager;
 
     /**
-     *
-     * "Caller ID'S"
-     *
-     * i use them as Argument for the Download task, to decide onPost Execute of the
-     * download task to which Method he should return after finished
-     *
-     * SOURCE ID : download task return to onPostDownloadSources
-     * NEWSLISTBUILDER : download task returns to onPostDownloadBUILDER
-     *
-     */
-    static final String CALLER_ID_SOURCEID = "2";
-    static final String CALLER_ID_NEWSLISTBUILDER = "3";
-
-    /**
-     *Write a List of all API Sources ID's in SourceIDs and filter them
+     * Write a List of all API Sources ID's in SourceIDs and filter them
      * with checkedSources which will be loaded from Shared Preferences
-     *
      */
     public static String[] SourceIDs;
-    public static Boolean[] checkedSources;
-
-    /**
-     *
-     * absolute List of all Newlist objects
-     * after downlaoding one Source it will be added up to this List
-     * the next one will also be added and so on
-     *
-     * Must be cleard before making a new Newlist request, else the new data
-     * will be set to the end of the existing list
-     *
-     */
-    public static ArrayList<NewsArticle> newsArticles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,17 +58,14 @@ public class MainActivity extends AppCompatActivity {
         recylerViewLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(recylerViewLayoutManager);
 
-        newsArticles = new ArrayList<>();
-
-
         //Init Side and Refresh View
         initDrawerLayout();
         initSwipeRefresh();
 
         //If Network is Ok first time download news list
-        if(checkNetwork()){
-            getSourceIDs();
-        }else{
+        if (checkNetwork()) {
+            reload();
+        } else {
             Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
         }
     }
@@ -100,18 +73,18 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Init Swipe Refresh Layout
      * On Pulldown refresh newslist
-     *
      */
     private void initSwipeRefresh() {
         mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.main_swipe);
         mWaveSwipeRefreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
 
-        if(checkNetwork()){
+        if (checkNetwork()) {
             mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
-                @Override public void onRefresh() {
-                    if(checkNetwork()){
-                        getSourceIDs();
-                    }else{
+                @Override
+                public void onRefresh() {
+                    if (checkNetwork()) {
+                        reload();
+                    } else {
                         Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -121,10 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Init the left side elastic Drawer Layout and set it's Fragment
-     *
+     * <p>
      * In it you can see complete news sources
      * On Open -> Sidemneu Fragment
-     *
      */
     private void initDrawerLayout() {
         LeftDrawerLayout mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
@@ -139,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * initializes the RecyclerView with News Data in the Main Window
      * Will be called after every reload and build a new List
      *
@@ -154,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
         String[] timestamps = new String[newsArticles.size()];
         String[] sources = new String[newsArticles.size()];
 
-
         for (int i = 0; i < newsArticles.size(); i++) {
 
             NewsArticle newsarticle;
@@ -168,14 +138,13 @@ public class MainActivity extends AppCompatActivity {
             sources[i] = newsarticle.getSource();
         }
 
-        recyclerViewAdapter = new NewsRecycleAdapter(context, titles,descriptions,urls,imageurls,timestamps,sources);
-        recyclerView.setAdapter(recyclerViewAdapter);
-
         mWaveSwipeRefreshLayout.setRefreshing(false);
+
+        recyclerViewAdapter = new NewsRecycleAdapter(context, titles, descriptions, urls, imageurls, timestamps, sources);
+        recyclerView.setAdapter(recyclerViewAdapter);
     }
 
     /**
-     *
      * Gets called by ListAdapter Class
      * opens users default phone webbrowser with new content
      *
@@ -196,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return true for Network, false for no Network
      */
-    private Boolean checkNetwork(){
+    private Boolean checkNetwork() {
 
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -206,112 +175,155 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * Download SourceID's for every Source
-     *
-     * Von hier an wird ein längerer Prozess in gang gesetzt, es werden die hier drunter liegenden
-     * Methoden automatisch auch aufgerufen, diese Methode ist als die eigentliche Refresh Newslist
-     * Methode!!!!
-     *
+     * *
      */
-    public synchronized static void getSourceIDs(){
-
-        mWaveSwipeRefreshLayout.setRefreshing(true);
+    public synchronized static String[] getSourceIDs() {
 
         String Url = "https://newsapi.org/v1/sources?language=";
-        new DownloadWebContent().execute(Url,CALLER_ID_SOURCEID);
+        String data = downloadUrlData(Url);
 
-        //Clear Array List, so the previews ones are not still there on new load
+        if (JSONHandling.checkAPIStatus(data)) {
+            return JSONHandling.ArrayfromJSONString(data, "sources", "id");
+
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gives back all checkd sources of sources list
+     *
+     * @param allsources List of all sources
+     * @return List of all checked sources
+     */
+    public synchronized static ArrayList<String> getcheckedSources(String[] allsources) {
+
+        Boolean[] checkedSources = null;
+
+        //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
+        checkedSources = LocalStorage.StringToBoolArray(
+                LocalStorage.loadArray(PREFSNAME, context));
+
+        if (checkedSources == null) {
+            //If there is no data saved in shared preferences init first dataset:
+            checkedSources = new Boolean[allsources.length];
+            for (int i = 0; i < checkedSources.length; i++) {
+                checkedSources[i] = false;
+            }
+            //Save Checked Items to Shared Preferences
+            LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),
+                    PREFSNAME, context);
+        }
+
+        //Create a List with all checked Source IDs
+        ArrayList<String> activeSources = new ArrayList();
+        for (int i = 0; i < checkedSources.length; i++) {
+            if (checkedSources[i]) {
+                activeSources.add(SourceIDs[i]);
+                Log.e("checkedSources ", SourceIDs[i]);
+            }
+        }
+
+        for (int i = 0; i < activeSources.size(); i++) {
+            Log.e("checked Sources "+ i,activeSources.get(i));
+
+        }
+        Log.e("Size",activeSources.size()+"");
+
+        return activeSources;
+    }
+
+    /**
+     *
+     * Load all Article from checked Sources and put them in one big ArrayList,
+     * sorted by Timestamp
+     *
+     * @param checkedSources
+     * @return
+     */
+    public synchronized static ArrayList<NewsArticle> loadArticles(ArrayList<String> checkedSources) {
+
+        ArrayList<NewsArticle> newsArticles = new ArrayList<>();
         newsArticles.clear();
+
+        Log.e("Size 2",checkedSources.size()+"");
+        for (int i = 0; i < checkedSources.size(); i++) {
+
+            Log.e("checkedSoure " +i,checkedSources.get(i).toString());
+            String data = downloadUrlData("https://newsapi.org/v1/articles?source=" +
+                    checkedSources.get(i) + "&apiKey=bddae599de5041ab9858c74961886e6c");
+
+            if (JSONHandling.checkAPIStatus(data)) {
+
+                String[] Title = JSONHandling.ArrayfromJSONString(data, "articles", "title");
+                String[] Description = JSONHandling.ArrayfromJSONString(data, "articles", "description");
+                String[] Url = JSONHandling.ArrayfromJSONString(data, "articles", "url");
+                String[] ImageUrl = JSONHandling.ArrayfromJSONString(data, "articles", "urlToImage");
+                String[] Timestamp = JSONHandling.ArrayfromJSONString(data, "articles", "publishedAt");
+                String source = JSONHandling.JsonInfo(data, "source");
+
+                //Add Arrays from the one downloaded source to Array List with all sources
+                for (int x = 0; x < Title.length; x++) {
+                    newsArticles.add(new NewsArticle(Title[x], Description[x], Url[x], ImageUrl[x], Timestamp[x], null, source));
+                    newsArticles.get(x).setDatetimestamp(newsArticles.get(x).getTimestamp());
+                }
+            }
+        }
+
+        if (newsArticles.size() > 0) {
+            // Sorting List for newest Date
+            //Collections.sort(newsArticles);
+
+            Collections.sort(newsArticles, new Comparator<NewsArticle>() {
+                @Override
+                public int compare(NewsArticle o1, NewsArticle o2) {
+                    if(o1.getDatetimestamp().before(o2.getDatetimestamp())){
+                        return -1;
+                    }else if (o2.getDatetimestamp().equals(o2.getDatetimestamp())){
+                        return 0;
+                    }else{
+                        return 1;
+                    }
+                }
+            });
+
+            Collections.reverse(newsArticles);
+
+        }
+
+        return newsArticles;
     }
 
     /**
      *
-     * Callback grom getSourceID's after download Source IDs
-     * Saves checked sources id's in an arraylist and get start the download
-     * process for every single source of this list
+     * Refeshing NewsList
      *
-     * @param data
      */
-    public synchronized static void onPostDownloadSources(String data){
+    static ArrayList<NewsArticle> asdf;
+    public static void reload() {
 
-        if(JSONHandling.checkAPIStatus(data)){
-            SourceIDs = JSONHandling.ArrayfromJSONString(data,"sources","id");
+        mWaveSwipeRefreshLayout.setRefreshing(true);
+        asdf = new ArrayList<>();
 
-            //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
-            checkedSources = LocalStorage.StringToBoolArray(
-                    LocalStorage.loadArray(PREFSNAME,context));
 
-            if(checkedSources[0]==null){
-                //If there is no data saved in shared preferences init first dataset:
-                checkedSources = new Boolean[SourceIDs.length];
-                for (int i = 0; i < checkedSources.length; i++) {
-                    checkedSources[i]=false;
-                }
-                //Save Checked Items to Shared Preferences
-                LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),
-                        PREFSNAME,context);
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+
+                SourceIDs = getSourceIDs();
+                asdf = loadArticles(getcheckedSources(SourceIDs));
+
             }
+        });
 
-            //Create a List with all checked Source IDs
-            ArrayList setSourceIDs = new ArrayList();
-            int x=0;
-            for (int i = 0; i < checkedSources.length ; i++) {
-                if(checkedSources[i]){
-                    setSourceIDs.add(SourceIDs[i]);
-                    x++;
-                }
-            }
-
-            //Download Articles for every of the Sources
-            for (int i = 0; i < setSourceIDs.size(); i++) {
-                new DownloadWebContent().execute("https://newsapi.org/v1/articles?source="+
-                        setSourceIDs.get(i)+"&apiKey=bddae599de5041ab9858c74961886e6c",
-                        CALLER_ID_NEWSLISTBUILDER);
-            }
-        }else{
-            //ERROR
-        }
-    }
-
-    /**
-     *
-     * Gets called after every download from one sources articles
-     * add sources articles to array list and show complete array list in Recycler View
-     *
-     * @param data
-     */
-    public synchronized static Boolean onPostDownloadBUILDER(String data) {
-
-        //Get Arrays from JSON Document
-        if(JSONHandling.checkAPIStatus(data)){
-            String[] Title = JSONHandling.ArrayfromJSONString(data,"articles","title");
-            String[] Description = JSONHandling.ArrayfromJSONString(data,"articles" ,"description");
-            String[] Url =  JSONHandling.ArrayfromJSONString(data,"articles","url");
-            String[] ImageUrl = JSONHandling.ArrayfromJSONString(data,"articles","urlToImage");
-            String[] Timestamp = JSONHandling.ArrayfromJSONString(data,"articles","publishedAt");
-            String source =  JSONHandling.JsonInfo(data,"source");
-
-            //Add Arrays from the one downloaded source to Array List with all sources
-            for (int i = 0; i < Title.length ; i++) {
-                newsArticles.add(new NewsArticle(Title[i],Description[i],Url[i],ImageUrl[i],Timestamp[i],null,source));
-                newsArticles.get(i).setDatetimestamp(newsArticles.get(i).getTimestamp());
-            }
-
-            if(newsArticles.size()>0){
-                // Sorting List for newest Date
-                Collections.sort(newsArticles);
-                Collections.reverse(newsArticles);
-            }
-
-
-            //Show ArrayList Data in Newsline
-            initRecyclerView(newsArticles);
-
-        }else{
-            //API ERROR
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-        return true;
+        initRecyclerView(asdf);
+
     }
 }

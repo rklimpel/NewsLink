@@ -2,13 +2,13 @@ package de.ricoklimpel.newslink;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by ricoklimpel on 02.12.16.
@@ -16,19 +16,7 @@ import java.net.URL;
 
 class DownloadWebContent extends AsyncTask<String, Void, String> {
 
-
     String ServerResponse;
-
-    /**
-     * Caller ID is the argument on index [1] in the urls argument
-     * used to tell onPostExecute the class he should return to
-     *
-     * ID = 0 : MainActivity
-     * ID = 1 : SidemnuFragment
-     * ID = 999: no CallerID
-     */
-    public int CallerID;
-
 
     /**
      *
@@ -40,13 +28,6 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
      */
     @Override
     protected synchronized String doInBackground(String... urls) {
-
-        CallerID = 999;
-
-        if(urls[1]!=null){
-            CallerID = Integer.parseInt(urls[1]);
-        }
-        Log.e("CallerID",String.valueOf(CallerID));
 
         // params comes from the execute() call: params[0] is the url.
         try {
@@ -71,7 +52,6 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
         }
     }
 
-
     /**
      * Called after finishing download Task
      *
@@ -79,25 +59,6 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
      */
     @Override
     protected void onPostExecute(String result) {
-
-        if (JSONHandling.checkAPIStatus(result)){
-            switch (CallerID){
-                case 1 :
-                    SidemenuFragment.onPostDownload(result);
-                    break;
-                case 2 :
-                    MainActivity.onPostDownloadSources(result);
-                case 3:
-
-                    MainActivity.onPostDownloadBUILDER(result);
-                    break;
-                default:
-                    //No CallerID
-                    break;
-            }
-        }else{
-            //ERROR
-        }
 
     }
 
@@ -119,6 +80,25 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
             return bo.toString();
         } catch (IOException e) {
             return "could not read URL Stream";
+        }
+    }
+
+    /**
+     * Download String from Argument URL
+     *
+     * @param url
+     * @return
+     */
+    public synchronized static String downloadUrlData(String url){
+
+        DownloadWebContent download = new DownloadWebContent();
+        download.execute(url);
+        try {
+            return download.get();
+        } catch (InterruptedException e) {
+            return null;
+        } catch (ExecutionException e) {
+            return null;
         }
     }
 }

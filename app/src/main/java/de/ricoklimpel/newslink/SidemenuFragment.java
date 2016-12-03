@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mxn.soul.flowingdrawer_core.MenuFragment;
+import static de.ricoklimpel.newslink.DownloadWebContent.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,8 +22,6 @@ public class SidemenuFragment extends MenuFragment {
     static RecyclerView.Adapter recyclerViewAdapter;
     static RecyclerView.LayoutManager recylerViewLayoutManager;
     static View view;
-
-    final String CALLER_ID = "1";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,8 +39,7 @@ public class SidemenuFragment extends MenuFragment {
         recylerViewLayoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(recylerViewLayoutManager);
 
-        final String stringUrl = "https://newsapi.org/v1/sources?language=";
-        new DownloadWebContent().execute(stringUrl,CALLER_ID);
+        initRecyclerView();
 
         return  setupReveal(view) ;
     }
@@ -61,15 +59,14 @@ public class SidemenuFragment extends MenuFragment {
      *
      */
     public void onCloseMenu(){
-        MainActivity.getSourceIDs();
+        MainActivity.reload();
     }
 
-    /**
-     * Will be called DownloadWebContent Class after finishing the downloads
-     *
-     * @param downloadData is the complete JSON String, form API
-     */
-    public static void onPostDownload(String downloadData){
+
+    public static void initRecyclerView(){
+
+        final String stringUrl = "https://newsapi.org/v1/sources?language=";
+        String downloadData = downloadUrlData(stringUrl);
 
         recyclerViewAdapter = new SourcesRecycleAdapter(view.getContext(),
                 JSONHandling.ArrayfromJSONString(downloadData,"sources","name"),
