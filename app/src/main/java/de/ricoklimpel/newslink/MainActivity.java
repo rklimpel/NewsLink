@@ -20,6 +20,8 @@ import java.util.Comparator;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
+import static de.ricoklimpel.newslink.SourcesRecycleAdapter.PREFSNAME;
+
 public class MainActivity extends AppCompatActivity {
 
     //Pulldown to refresh Layout
@@ -80,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
         recylerViewLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(recylerViewLayoutManager);
 
-        newsArticles = new ArrayList<NewsArticle>();
+        newsArticles = new ArrayList<>();
+
 
         //Init Side and Refresh View
         initDrawerLayout();
@@ -211,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
      * Methode!!!!
      *
      */
-    public static void getSourceIDs(){
+    public synchronized static void getSourceIDs(){
 
         mWaveSwipeRefreshLayout.setRefreshing(true);
 
@@ -230,14 +233,14 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param data
      */
-    public static void onPostDownloadSources(String data){
+    public synchronized static void onPostDownloadSources(String data){
 
         if(JSONHandling.checkAPIStatus(data)){
             SourceIDs = JSONHandling.ArrayfromJSONString(data,"sources","id");
 
             //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
             checkedSources = LocalStorage.StringToBoolArray(
-                    LocalStorage.loadArray(SourcesRecycleAdapter.PREFSNAME,context));
+                    LocalStorage.loadArray(PREFSNAME,context));
 
             if(checkedSources[0]==null){
                 //If there is no data saved in shared preferences init first dataset:
@@ -247,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 //Save Checked Items to Shared Preferences
                 LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),
-                        SourcesRecycleAdapter.PREFSNAME,context);
+                        PREFSNAME,context);
             }
 
             //Create a List with all checked Source IDs
@@ -278,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param data
      */
-    public static void onPostDownloadBUILDER(String data) {
+    public synchronized static Boolean onPostDownloadBUILDER(String data) {
 
         //Get Arrays from JSON Document
         if(JSONHandling.checkAPIStatus(data)){
@@ -292,11 +295,15 @@ public class MainActivity extends AppCompatActivity {
             //Add Arrays from the one downloaded source to Array List with all sources
             for (int i = 0; i < Title.length ; i++) {
                 newsArticles.add(new NewsArticle(Title[i],Description[i],Url[i],ImageUrl[i],Timestamp[i],null,source));
+                newsArticles.get(i).setDatetimestamp(newsArticles.get(i).getTimestamp());
             }
 
-            // Sorting List for newest Date
-            Collections.sort(newsArticles);
-            Collections.reverse(newsArticles);
+            if(newsArticles.size()>0){
+                // Sorting List for newest Date
+                Collections.sort(newsArticles);
+                Collections.reverse(newsArticles);
+            }
+
 
             //Show ArrayList Data in Newsline
             initRecyclerView(newsArticles);
@@ -304,5 +311,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             //API ERROR
         }
+
+        return true;
     }
 }

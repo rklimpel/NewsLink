@@ -39,7 +39,7 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
      * @return
      */
     @Override
-    protected String doInBackground(String... urls) {
+    protected synchronized String doInBackground(String... urls) {
 
         CallerID = 999;
 
@@ -88,6 +88,7 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
                 case 2 :
                     MainActivity.onPostDownloadSources(result);
                 case 3:
+
                     MainActivity.onPostDownloadBUILDER(result);
                     break;
                 default:

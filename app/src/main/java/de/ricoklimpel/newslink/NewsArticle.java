@@ -1,5 +1,7 @@
 package de.ricoklimpel.newslink;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -129,10 +131,17 @@ public class NewsArticle implements Comparable<NewsArticle>{
     @Override
     public int compareTo(NewsArticle other) {
 
-        return (this.getDatetimestamp().before(other.getDatetimestamp()) ? -1 :
+        Log.e("other ",""+other.getDatetimestamp());
+        Log.e("this " ,""+this.getDatetimestamp());
 
-                (this.getDatetimestamp() == other.getDatetimestamp() ? 0 : 1));
+        try {
+            return (this.getDatetimestamp().before(other.getDatetimestamp()) ? -1 :
+                    (this.getDatetimestamp() == other.getDatetimestamp() ? 0 : 1));
 
+        }catch(NullPointerException e){
+            Log.e("compare to News Acticle",e.getMessage());
+            return 1;
+        }
     }
 
 }

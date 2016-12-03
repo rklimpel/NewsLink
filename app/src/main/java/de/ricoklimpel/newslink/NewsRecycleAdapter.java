@@ -10,6 +10,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.ViewHolder> {
 
@@ -74,7 +80,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         Picasso.with(context).load(imageURLs[position]).into(holder.ivNewsImage);
 
         //Set Timestamp
-        holder.tvTimestamp.setText(timestamps[position]);
+        holder.tvTimestamp.setText(readableTimestamp(timestamps[position]));
 
         //Set Description
         holder.tvDescription.setText(DescriptionValues[position]);
@@ -101,6 +107,31 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     public int getItemCount() {
 
         return TitleValues.length;
+    }
+
+    /**
+     *
+     * parse Date Format form API download to User readable Format
+     *
+     * @param timestamp
+     * @return
+     */
+    public String readableTimestamp(String timestamp){
+
+        String readable = null;
+        Date date = null;
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        DateFormat outputFormat = new SimpleDateFormat("dd. MMMM - HH:mm", Locale.GERMAN);
+
+        try {
+            date = format.parse(timestamp);
+            readable = outputFormat.format(date);
+        } catch (ParseException e) {
+            //ERROR
+        }
+
+        return readable;
     }
 }
 
