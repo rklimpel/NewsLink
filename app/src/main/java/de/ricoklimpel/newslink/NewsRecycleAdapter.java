@@ -17,16 +17,18 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     String[] DescriptionValues;
     String[] Links;
     String[] imageURLs;
+    String[] timestamps;
     Context context;
     View view1;
     ViewHolder viewHolder1;
 
-    public NewsRecycleAdapter(Context context1, String[] SubjectValues1, String[] DescriptionValues, String[] Links, String[] ImageUrls) {
+    public NewsRecycleAdapter(Context context1, String[] SubjectValues1, String[] DescriptionValues, String[] Links, String[] ImageUrls,String[]timestamps) {
 
         this.imageURLs = ImageUrls;
         this.Links = Links;
         this.DescriptionValues = DescriptionValues;
         this.TitleValues = SubjectValues1;
+        this.timestamps = timestamps;
         this.context = context1;
     }
 
@@ -35,6 +37,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         public TextView textView;
         public TextView tvDescription;
         public ImageView ivNewsImage;
+        public TextView tvTimestamp;
 
         public ViewHolder(View v) {
 
@@ -43,6 +46,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
             tvDescription = (TextView)v.findViewById(R.id.description_textview);
             textView = (TextView) v.findViewById(R.id.subject_textview);
             ivNewsImage = (ImageView) v.findViewById(R.id.iv_newsimage);
+            tvTimestamp = (TextView)v.findViewById(R.id.tv_timestamp);
         }
     }
 
@@ -63,6 +67,9 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
 
         //Set Image
         Picasso.with(context).load(imageURLs[position]).into(holder.ivNewsImage);
+
+        //Set Timestamp
+        holder.tvTimestamp.setText(timestamps[position]);
 
         //Set Description
         holder.tvDescription.setText(DescriptionValues[position]);

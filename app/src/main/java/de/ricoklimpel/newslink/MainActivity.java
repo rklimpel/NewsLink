@@ -1,6 +1,5 @@
 package de.ricoklimpel.newslink;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -14,12 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.mxn.soul.flowingdrawer_core.FlowingView;
 import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
-
 import java.util.ArrayList;
-
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     static RelativeLayout relativeLayout;
     static RecyclerView.Adapter recyclerViewAdapter;
     static RecyclerView.LayoutManager recylerViewLayoutManager;
+
     // Gets the URL from the UI's text field.
     final String stringUrl = "https://newsapi.org/v1/articles?source=spiegel-online&apiKey=bddae599de5041ab9858c74961886e6c";
 
@@ -44,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<String> allDescriptions;
     public static ArrayList<String> allUrls;
     public static ArrayList<String> allImageUrls;
+    public static ArrayList<String> allTimestamps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         allDescriptions = new ArrayList();
         allUrls= new ArrayList();
         allImageUrls = new ArrayList();
+        allTimestamps = new ArrayList<>();
 
         //Init Side and Refresh View
         initDrawerLayout();
@@ -68,14 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
         //If Network is Ok first time download news list
         if(checkNetwork()){
-            new DownloadWebContent().execute(stringUrl,CALLER_ID_NEWSLIST);
             getSourceIDs();
         }else{
             Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
         }
-
     }
-
 
     /**
      * Init Swipe Refresh Layout
@@ -87,13 +83,15 @@ public class MainActivity extends AppCompatActivity {
         if(checkNetwork()){
             mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
                 @Override public void onRefresh() {
-
-                    getSourceIDs();
-
+                    //If Network is Ok first time download news list
+                    if(checkNetwork()){
+                        getSourceIDs();
+                    }else{
+                        Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
-
     }
 
     /**
@@ -112,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
         mLeftDrawerLayout.setMenuFragment(mMenuFragment);
     }
 
-
     /**
      * Will be called DownloadWebContent Class after finishing the downloads
      *
@@ -125,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
         initRecyclerView(JSONHandling.ArrayfromJSONString(data,"articles","title"),
                 JSONHandling.ArrayfromJSONString(data,"articles" ,"description"),
                 JSONHandling.ArrayfromJSONString(data,"articles","url"),
-                JSONHandling.ArrayfromJSONString(data,"articles","urlToImage"));
-
+                JSONHandling.ArrayfromJSONString(data,"articles","urlToImage"),
+                JSONHandling.ArrayfromJSONString(data,"articles","publishedAt"));
     }
 
     /**
@@ -137,9 +134,9 @@ public class MainActivity extends AppCompatActivity {
      * @param links Array of news links
      * @param imageURLs Array of news image urls
      */
-    public static void initRecyclerView(String[] content, String[] description,String[] links,String[] imageURLs) {
+    public static void initRecyclerView(String[] content, String[] description,String[] links,String[] imageURLs, String[] timestamps) {
 
-        recyclerViewAdapter = new NewsRecycleAdapter(context, content,description,links,imageURLs);
+        recyclerViewAdapter = new NewsRecycleAdapter(context, content,description,links,imageURLs,timestamps);
         recyclerView.setAdapter(recyclerViewAdapter);
 
         mWaveSwipeRefreshLayout.setRefreshing(false);
@@ -160,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
         i.setData(Uri.parse(url));
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
-
     }
 
     /**
@@ -176,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
 
         return networkInfo != null && networkInfo.isConnected();
     }
-
 
     /**
      *
@@ -197,9 +192,8 @@ public class MainActivity extends AppCompatActivity {
         allDescriptions.clear();
         allUrls.clear();
         allImageUrls.clear();
-
+        allTimestamps.clear();
     }
-
 
     /**
      *
@@ -261,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
             String[] Description = JSONHandling.ArrayfromJSONString(data,"articles" ,"description");
             String[] Url =  JSONHandling.ArrayfromJSONString(data,"articles","url");
             String[] ImageUrl = JSONHandling.ArrayfromJSONString(data,"articles","urlToImage");
+            String[] Timestamp = JSONHandling.ArrayfromJSONString(data,"articles","publishedAt");
 
             //Add Arrays from the one downloaded source to Array List with all sources
             for (int i = 0; i < Title.length ; i++) {
@@ -269,16 +264,15 @@ public class MainActivity extends AppCompatActivity {
                 allDescriptions.add(Description[i]);
                 allUrls.add(Url[i]);
                 allImageUrls.add(ImageUrl[i]);
-
+                allTimestamps.add(Timestamp[i]);
             }
-
         }
 
         //Show ArrayList Data in Newsline
         initRecyclerView(allTitles.toArray(new String[allTitles.size()]),
                 allDescriptions.toArray(new String[allTitles.size()]),
                 allUrls.toArray(new String[allTitles.size()]),
-                allImageUrls.toArray(new String[allTitles.size()]));
-
+                allImageUrls.toArray(new String[allTitles.size()]),
+                allTimestamps.toArray(new String[allTimestamps.size()]));
     }
 }
