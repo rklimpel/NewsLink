@@ -82,9 +82,6 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
 
         if (JSONHandling.checkAPIStatus(result)){
             switch (CallerID){
-                case 0 :
-                    MainActivity.onPostDownloadNews(result);
-                    break;
                 case 1 :
                     SidemenuFragment.onPostDownload(result);
                     break;
