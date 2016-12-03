@@ -136,13 +136,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     *
      * initializes the RecyclerView with News Data in the Main Window
      * Will be called after every reload and build a new List
      *
-     * @param content Array of news Titles
-     * @param description Array of news descriptions
-     * @param links Array of news links
-     * @param imageURLs Array of news image urls
+     * @param newsArticles
      */
     public static void initRecyclerView(ArrayList<NewsArticle> newsArticles) {
 
@@ -151,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
         String[] urls = new String[newsArticles.size()];
         String[] imageurls = new String[newsArticles.size()];
         String[] timestamps = new String[newsArticles.size()];
+        String[] sources = new String[newsArticles.size()];
 
 
         for (int i = 0; i < newsArticles.size(); i++) {
@@ -163,9 +162,10 @@ public class MainActivity extends AppCompatActivity {
             urls[i] = newsarticle.getUrl();
             imageurls[i] = newsarticle.getImageUrl();
             timestamps[i] = newsarticle.getTimestamp();
+            sources[i] = newsarticle.getSource();
         }
 
-        recyclerViewAdapter = new NewsRecycleAdapter(context, titles,descriptions,urls,imageurls,timestamps);
+        recyclerViewAdapter = new NewsRecycleAdapter(context, titles,descriptions,urls,imageurls,timestamps,sources);
         recyclerView.setAdapter(recyclerViewAdapter);
 
         mWaveSwipeRefreshLayout.setRefreshing(false);
@@ -236,7 +236,9 @@ public class MainActivity extends AppCompatActivity {
             SourceIDs = JSONHandling.ArrayfromJSONString(data,"sources","id");
 
             //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
-            checkedSources = LocalStorage.StringToBoolArray(LocalStorage.loadArray(SourcesRecycleAdapter.PREFSNAME,context));
+            checkedSources = LocalStorage.StringToBoolArray(
+                    LocalStorage.loadArray(SourcesRecycleAdapter.PREFSNAME,context));
+
             if(checkedSources[0]==null){
                 //If there is no data saved in shared preferences init first dataset:
                 checkedSources = new Boolean[SourceIDs.length];
@@ -244,7 +246,8 @@ public class MainActivity extends AppCompatActivity {
                     checkedSources[i]=false;
                 }
                 //Save Checked Items to Shared Preferences
-                LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),SourcesRecycleAdapter.PREFSNAME,context);
+                LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),
+                        SourcesRecycleAdapter.PREFSNAME,context);
             }
 
             //Create a List with all checked Source IDs
@@ -260,7 +263,8 @@ public class MainActivity extends AppCompatActivity {
             //Download Articles for every of the Sources
             for (int i = 0; i < setSourceIDs.size(); i++) {
                 new DownloadWebContent().execute("https://newsapi.org/v1/articles?source="+
-                        setSourceIDs.get(i)+"&apiKey=bddae599de5041ab9858c74961886e6c",CALLER_ID_NEWSLISTBUILDER);
+                        setSourceIDs.get(i)+"&apiKey=bddae599de5041ab9858c74961886e6c",
+                        CALLER_ID_NEWSLISTBUILDER);
             }
         }else{
             //ERROR
@@ -283,10 +287,11 @@ public class MainActivity extends AppCompatActivity {
             String[] Url =  JSONHandling.ArrayfromJSONString(data,"articles","url");
             String[] ImageUrl = JSONHandling.ArrayfromJSONString(data,"articles","urlToImage");
             String[] Timestamp = JSONHandling.ArrayfromJSONString(data,"articles","publishedAt");
+            String source =  JSONHandling.JsonInfo(data,"source");
 
             //Add Arrays from the one downloaded source to Array List with all sources
             for (int i = 0; i < Title.length ; i++) {
-                newsArticles.add(new NewsArticle(Title[i],Description[i],Url[i],ImageUrl[i],Timestamp[i],null,null));
+                newsArticles.add(new NewsArticle(Title[i],Description[i],Url[i],ImageUrl[i],Timestamp[i],null,source));
             }
 
             // Sorting List for newest Date

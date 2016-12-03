@@ -18,11 +18,13 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     String[] Links;
     String[] imageURLs;
     String[] timestamps;
+    String[] sources;
     Context context;
     View view1;
     ViewHolder viewHolder1;
 
-    public NewsRecycleAdapter(Context context1, String[] SubjectValues1, String[] DescriptionValues, String[] Links, String[] ImageUrls,String[]timestamps) {
+    public NewsRecycleAdapter(Context context1, String[] SubjectValues1, String[] DescriptionValues,
+                              String[] Links, String[] ImageUrls,String[]timestamps,String[] source) {
 
         this.imageURLs = ImageUrls;
         this.Links = Links;
@@ -30,6 +32,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         this.TitleValues = SubjectValues1;
         this.timestamps = timestamps;
         this.context = context1;
+        this.sources = source;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -38,6 +41,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         public TextView tvDescription;
         public ImageView ivNewsImage;
         public TextView tvTimestamp;
+        public TextView tvSource;
 
         public ViewHolder(View v) {
 
@@ -47,6 +51,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
             textView = (TextView) v.findViewById(R.id.subject_textview);
             ivNewsImage = (ImageView) v.findViewById(R.id.iv_newsimage);
             tvTimestamp = (TextView)v.findViewById(R.id.tv_timestamp);
+            tvSource = (TextView)v.findViewById(R.id.tv_source);
         }
     }
 
@@ -73,6 +78,9 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
 
         //Set Description
         holder.tvDescription.setText(DescriptionValues[position]);
+
+        //Set Source Name
+        holder.tvSource.setText(sources[position]);
 
         //Set OnClick Listeners for WebView
         holder.textView.setOnClickListener(new View.OnClickListener() {

@@ -77,6 +77,26 @@ public class JSONHandling {
 
     /**
      *
+     * Return a Info value of the First Layer of Json file
+     * e.g. status check, source id , or whatever
+     *
+     * @param json
+     * @param info
+     * @return
+     */
+    public static String JsonInfo(String json,String info){
+        String jsonInfo = null;
+        try {
+            JSONObject obj = new JSONObject(json);
+            jsonInfo = obj.getString(info);
+        } catch (JSONException e) {
+
+        }
+        return jsonInfo;
+    }
+
+    /**
+     *
      * Check API, if there has been an http request api Error it return error instead of ok
      *
      * @param json

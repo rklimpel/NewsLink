@@ -91,7 +91,8 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
 
 
         //Set checked if Arrays had saved checkd state
-        if(checkedSources[position])holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.auswahl));
+        if(checkedSources[position])holder.linearLayout.setBackgroundColor(
+                context.getResources().getColor(R.color.auswahl));
 
 
         /**

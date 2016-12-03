@@ -46,15 +46,22 @@ public class SidemenuFragment extends MenuFragment {
         return  setupReveal(view) ;
     }
 
+
     public void onOpenMenu(){
 
 
     }
 
+    /**
+     *
+     * If the Users close the Sidemenu with a swipe
+     *
+     * Reload NewsList in MainAcitivty, (maybe there have been Source changes)
+     * //TODO just reload if there have been source changes!
+     *
+     */
     public void onCloseMenu(){
-
         MainActivity.getSourceIDs();
-
     }
 
     /**
