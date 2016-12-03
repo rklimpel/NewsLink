@@ -48,8 +48,7 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         if (checkedSources.length == 0) {
             //If there is no data saved in shared preferences init first dataset:
             checkedSources = new Boolean[TitleValues.length];
-            for (int i = 0; i < checkedSources.length; i++) {
-                checkedSources[i] = false;
+            for (int i = 0; i < checkedSources.length; i++) {checkedSources[i] = false;
             }
             //Save Checked Items to Shared Preferences
             LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources), PREFSNAME, context);
@@ -93,8 +92,12 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
 
 
         //Set checked if Arrays had saved checkd state
-        if (checkedSources[position]) holder.linearLayout.setBackgroundColor(
-                context.getResources().getColor(R.color.auswahl));
+        if (checkedSources[position]){
+            holder.linearLayout.setBackgroundColor(
+                    context.getResources().getColor(R.color.auswahl));
+        }else{
+            holder.linearLayout.setBackgroundColor(Color.WHITE);
+        }
 
 
         /**

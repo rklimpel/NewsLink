@@ -192,7 +192,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Gives back all checkd sources of sources list
+     * Gives back all checked sources of sources list
+     * what is checked? Load checked Sources from SharedPreferences
      *
      * @param allsources List of all sources
      * @return List of all checked sources
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         checkedSources = LocalStorage.StringToBoolArray(
                 LocalStorage.loadArray(PREFSNAME, context));
 
-        if (checkedSources == null) {
+        if (checkedSources.length==0) {
             //If there is no data saved in shared preferences init first dataset:
             checkedSources = new Boolean[allsources.length];
             for (int i = 0; i < checkedSources.length; i++) {
@@ -250,12 +251,13 @@ public class MainActivity extends AppCompatActivity {
         Log.e("Size 2",checkedSources.size()+"");
         for (int i = 0; i < checkedSources.size(); i++) {
 
+            //Get Data for this source
             Log.e("checkedSoure " +i,checkedSources.get(i).toString());
             String data = downloadUrlData("https://newsapi.org/v1/articles?source=" +
                     checkedSources.get(i) + "&apiKey=bddae599de5041ab9858c74961886e6c");
 
             if (JSONHandling.checkAPIStatus(data)) {
-
+                //Get Arrays with specific Values from Json document
                 String[] Title = JSONHandling.ArrayfromJSONString(data, "articles", "title");
                 String[] Description = JSONHandling.ArrayfromJSONString(data, "articles", "description");
                 String[] Url = JSONHandling.ArrayfromJSONString(data, "articles", "url");
@@ -265,8 +267,8 @@ public class MainActivity extends AppCompatActivity {
 
                 //Add Arrays from the one downloaded source to Array List with all sources
                 for (int x = 0; x < Title.length; x++) {
-                    newsArticles.add(new NewsArticle(Title[x], Description[x], Url[x], ImageUrl[x], Timestamp[x], null, source));
-                    newsArticles.get(x).setDatetimestamp(newsArticles.get(x).getTimestamp());
+                    newsArticles.add(new NewsArticle(Title[x], Description[x], Url[x], ImageUrl[x],
+                            Timestamp[x], null, source,Utils.convertToReadableDate(Timestamp[x])));
                 }
             }
         }
@@ -274,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
         if (newsArticles.size() > 0) {
             // Sorting List for newest Date
             //Collections.sort(newsArticles);
-
             Collections.sort(newsArticles, new Comparator<NewsArticle>() {
                 @Override
                 public int compare(NewsArticle o1, NewsArticle o2) {
@@ -288,6 +289,28 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            /*
+            //Sort For Titles
+            Collections.sort(newsArticles, new Comparator<NewsArticle>() {
+                @Override
+                public int compare(NewsArticle o1, NewsArticle o2) {
+                    String a=o1.getTitle();
+                    String b = o2.getTitle();
+                    int compare = a.compareTo(b);
+                    if (compare < 0)
+                    {
+                        return +1;
+                    }
+                    else
+                    {
+                        if (compare > 0)
+
+                            return -1;
+                    }
+                    return 0;
+            }
+            });*/
+
             Collections.reverse(newsArticles);
 
         }
@@ -300,29 +323,13 @@ public class MainActivity extends AppCompatActivity {
      * Refeshing NewsList
      *
      */
-    static ArrayList<NewsArticle> asdf;
     public static void reload() {
 
         mWaveSwipeRefreshLayout.setRefreshing(true);
-        asdf = new ArrayList<>();
+        ArrayList<NewsArticle> asdf = new ArrayList<>();
 
-
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-
-                SourceIDs = getSourceIDs();
-                asdf = loadArticles(getcheckedSources(SourceIDs));
-
-            }
-        });
-
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        SourceIDs = getSourceIDs();
+        asdf = loadArticles(getcheckedSources(SourceIDs));
         initRecyclerView(asdf);
 
     }
