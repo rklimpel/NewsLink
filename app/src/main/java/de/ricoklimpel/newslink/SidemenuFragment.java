@@ -2,6 +2,7 @@ package de.ricoklimpel.newslink;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,7 +60,13 @@ public class SidemenuFragment extends MenuFragment {
      *
      */
     public void onCloseMenu(){
-        MainActivity.reload();
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            public void run() {
+                MainActivity.reload();
+            }
+        }, 300);
+
     }
 
 

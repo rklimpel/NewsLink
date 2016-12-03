@@ -2,28 +2,30 @@ package de.ricoklimpel.newslink;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.mxn.soul.flowingdrawer_core.FlowingView;
 import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.concurrent.ExecutionException;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
-
-import static de.ricoklimpel.newslink.SourcesRecycleAdapter.PREFSNAME;
-import static de.ricoklimpel.newslink.DownloadWebContent.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,16 +78,19 @@ public class MainActivity extends AppCompatActivity {
     private void initSwipeRefresh() {
         mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.main_swipe);
         mWaveSwipeRefreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
+        mWaveSwipeRefreshLayout.setMaxDropHeight(getScreenSize()[1]/20*9);
 
         if (checkNetwork()) {
             mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+
                     if (checkNetwork()) {
                         reload();
                     } else {
                         Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
                     }
+
                 }
             });
         }
@@ -174,9 +179,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * Refeshing NewsList
-     *
      */
     public static void reload() {
 
@@ -213,7 +216,15 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
 
+    }
 
+    public int[] getScreenSize(){
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        return new int[]{width,height};
     }
 }
 
