@@ -22,7 +22,7 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
     String[] TitleValues;
     String[] logoURLS;
 
-    final String PREFSNAME = "checkedSources";
+    public static final String PREFSNAME = "checkedSources";
 
     /**
      * saves which sources are checked and which aren'T
@@ -41,16 +41,17 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         this.TitleValues = SubjectValues1;
         this.context = context1;
 
-        checkedSources = new Boolean[TitleValues.length];
-        for (int i = 0; i < checkedSources.length; i++) {
-            checkedSources[i]=false;
-        }
-
-        //Save Checked Items to Shared Preferences
-        LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),PREFSNAME,context);
-
         //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
         checkedSources = LocalStorage.StringToBoolArray(LocalStorage.loadArray(PREFSNAME,context));
+        if(checkedSources[0]==null){
+            //If there is no data saved in shared preferences init first dataset:
+            checkedSources = new Boolean[TitleValues.length];
+            for (int i = 0; i < checkedSources.length; i++) {
+                checkedSources[i]=false;
+            }
+            //Save Checked Items to Shared Preferences
+            LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),PREFSNAME,context);
+        }
 
     }
 

@@ -53,6 +53,8 @@ public class SidemenuFragment extends MenuFragment {
 
     public void onCloseMenu(){
 
+        MainActivity.getSourceIDs();
+
     }
 
     /**

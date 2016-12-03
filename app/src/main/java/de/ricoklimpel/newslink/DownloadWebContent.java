@@ -83,10 +83,15 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
         if (JSONHandling.checkAPIStatus(result)){
             switch (CallerID){
                 case 0 :
-                    MainActivity.onPostDownload(result);
+                    MainActivity.onPostDownloadNews(result);
                     break;
                 case 1 :
                     SidemenuFragment.onPostDownload(result);
+                    break;
+                case 2 :
+                    MainActivity.onPostDownloadSources(result);
+                case 3:
+                    MainActivity.onPostDownloadBUILDER(result);
                     break;
                 default:
                     //No CallerID
