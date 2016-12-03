@@ -18,7 +18,6 @@ import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
@@ -175,119 +174,48 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Download SourceID's for every Source
-     * *
+     *
+     * Refeshing NewsList
+     *
      */
-    public synchronized static String[] getSourceIDs() {
+    public static void reload() {
 
-        String Url = "https://newsapi.org/v1/sources?language=";
-        String data = downloadUrlData(Url);
-
-        if (JSONHandling.checkAPIStatus(data)) {
-            return JSONHandling.ArrayfromJSONString(data, "sources", "id");
-
-        } else {
-            return null;
+        AsyncGetSourceIDs atask = new AsyncGetSourceIDs();
+        atask.executeOnExecutor(AsyncGetSourceIDs.THREAD_POOL_EXECUTOR);
+        try {
+            SourceIDs = atask.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
+
+        /*ArrayList<String> qwer = new ArrayList<>();
+        AsyncGetSelectedSources btask = new AsyncGetSelectedSources();
+        btask.executeOnExecutor(AsyncGetSelectedSources.THREAD_POOL_EXECUTOR,SourceIDs);
+        try {
+            qwer = btask.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }*/
+
+        /*ArrayList<NewsArticle> asdf = new ArrayList<>();
+        AsyncGetArticle ctask = new AsyncGetArticle();
+        ctask.executeOnExecutor(AsyncGetArticle.THREAD_POOL_EXECUTOR,qwer);
+        try {
+            asdf = ctask.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }*/
+
+
+
     }
-
-    /**
-     * Gives back all checked sources of sources list
-     * what is checked? Load checked Sources from SharedPreferences
-     *
-     * @param allsources List of all sources
-     * @return List of all checked sources
-     */
-    public synchronized static ArrayList<String> getcheckedSources(String[] allsources) {
-
-        Boolean[] checkedSources = null;
-
-        //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
-        checkedSources = LocalStorage.StringToBoolArray(
-                LocalStorage.loadArray(PREFSNAME, context));
-
-        if (checkedSources.length==0) {
-            //If there is no data saved in shared preferences init first dataset:
-            checkedSources = new Boolean[allsources.length];
-            for (int i = 0; i < checkedSources.length; i++) {
-                checkedSources[i] = false;
-            }
-            //Save Checked Items to Shared Preferences
-            LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources),
-                    PREFSNAME, context);
-        }
-
-        //Create a List with all checked Source IDs
-        ArrayList<String> activeSources = new ArrayList();
-        for (int i = 0; i < checkedSources.length; i++) {
-            if (checkedSources[i]) {
-                activeSources.add(SourceIDs[i]);
-                Log.e("checkedSources ", SourceIDs[i]);
-            }
-        }
-
-        for (int i = 0; i < activeSources.size(); i++) {
-            Log.e("checked Sources "+ i,activeSources.get(i));
-
-        }
-        Log.e("Size",activeSources.size()+"");
-
-        return activeSources;
-    }
-
-    /**
-     *
-     * Load all Article from checked Sources and put them in one big ArrayList,
-     * sorted by Timestamp
-     *
-     * @param checkedSources
-     * @return
-     */
-    public synchronized static ArrayList<NewsArticle> loadArticles(ArrayList<String> checkedSources) {
-
-        ArrayList<NewsArticle> newsArticles = new ArrayList<>();
-        newsArticles.clear();
-
-        Log.e("Size 2",checkedSources.size()+"");
-        for (int i = 0; i < checkedSources.size(); i++) {
-
-            //Get Data for this source
-            Log.e("checkedSoure " +i,checkedSources.get(i).toString());
-            String data = downloadUrlData("https://newsapi.org/v1/articles?source=" +
-                    checkedSources.get(i) + "&apiKey=bddae599de5041ab9858c74961886e6c");
-
-            if (JSONHandling.checkAPIStatus(data)) {
-                //Get Arrays with specific Values from Json document
-                String[] Title = JSONHandling.ArrayfromJSONString(data, "articles", "title");
-                String[] Description = JSONHandling.ArrayfromJSONString(data, "articles", "description");
-                String[] Url = JSONHandling.ArrayfromJSONString(data, "articles", "url");
-                String[] ImageUrl = JSONHandling.ArrayfromJSONString(data, "articles", "urlToImage");
-                String[] Timestamp = JSONHandling.ArrayfromJSONString(data, "articles", "publishedAt");
-                String source = JSONHandling.JsonInfo(data, "source");
-
-                //Add Arrays from the one downloaded source to Array List with all sources
-                for (int x = 0; x < Title.length; x++) {
-                    newsArticles.add(new NewsArticle(Title[x], Description[x], Url[x], ImageUrl[x],
-                            Timestamp[x], null, source,Utils.convertToReadableDate(Timestamp[x])));
-                }
-            }
-        }
-
-        if (newsArticles.size() > 0) {
-            // Sorting List for newest Date
-            //Collections.sort(newsArticles);
-            Collections.sort(newsArticles, new Comparator<NewsArticle>() {
-                @Override
-                public int compare(NewsArticle o1, NewsArticle o2) {
-                    if(o1.getDatetimestamp().before(o2.getDatetimestamp())){
-                        return -1;
-                    }else if (o2.getDatetimestamp().equals(o2.getDatetimestamp())){
-                        return 0;
-                    }else{
-                        return 1;
-                    }
-                }
-            });
+}
 
             /*
             //Sort For Titles
@@ -310,27 +238,3 @@ public class MainActivity extends AppCompatActivity {
                     return 0;
             }
             });*/
-
-            Collections.reverse(newsArticles);
-
-        }
-
-        return newsArticles;
-    }
-
-    /**
-     *
-     * Refeshing NewsList
-     *
-     */
-    public static void reload() {
-
-        mWaveSwipeRefreshLayout.setRefreshing(true);
-        ArrayList<NewsArticle> asdf = new ArrayList<>();
-
-        SourceIDs = getSourceIDs();
-        asdf = loadArticles(getcheckedSources(SourceIDs));
-        initRecyclerView(asdf);
-
-    }
-}

@@ -43,7 +43,7 @@ dependencies {
     compile 'com.mxn.soul:flowingdrawer-core:1.2.5'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:cardview-v7:22.+'
+    compile 'com.android.support:cardview-v7:24.+'
 
     testCompile 'junit:junit:4.12'
 }

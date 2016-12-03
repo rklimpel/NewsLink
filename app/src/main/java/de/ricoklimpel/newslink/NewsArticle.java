@@ -25,7 +25,7 @@ public class NewsArticle implements Comparable<NewsArticle>{
     Date datetimestamp;
 
     public NewsArticle(){
-        new NewsArticle(null,null,null,null,null,null,null,null);
+        new NewsArticle(null,null,null,null,null,null,null);
     }
 
     /**
@@ -38,10 +38,9 @@ public class NewsArticle implements Comparable<NewsArticle>{
      * @param timestamp
      * @param author
      * @param source
-     * @param datetimestamp
      */
     public NewsArticle(String title,String description,String url,String imageUrl,
-                       String timestamp,String author,String source,Date datetimestamp){
+                       String timestamp,String author,String source){
 
         this.title = title;
         this.description = description;
@@ -50,7 +49,6 @@ public class NewsArticle implements Comparable<NewsArticle>{
         this.timestamp = timestamp;
         this.author = author;
         this.source = source;
-        this.datetimestamp = datetimestamp;
 
         this.setDatetimestamp(timestamp);
     }
