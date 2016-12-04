@@ -1,8 +1,6 @@
 package de.ricoklimpel.newslink;
 
 import android.util.Log;
-
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,12 +9,15 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import static de.ricoklimpel.newslink.DownloadWebContent.downloadUrlData;
-import static de.ricoklimpel.newslink.MainActivity.SourceIDs;
-import static de.ricoklimpel.newslink.MainActivity.context;
 import static de.ricoklimpel.newslink.MainActivity.initRecyclerView;
 import static de.ricoklimpel.newslink.MainActivity.mWaveSwipeRefreshLayout;
-import static de.ricoklimpel.newslink.SourcesRecycleAdapter.PREFSNAME;
 
+/**
+ *
+ * This little AsycTask uses the List of all selected Soures and fetches the latest Sources News
+ * at the end he calls the Recyclerview initiator from MainActivity to wirte news in NewsList
+ *
+ */
 class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, ArrayList<NewsArticle>>{
 
     String data;
@@ -39,16 +40,14 @@ class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, Arra
         newsArticles.clear();
         ArrayList<String>checkedSources = urls[0];
 
-        Log.e("Size 2",checkedSources.size()+"");
         for (int i = 0; i < checkedSources.size(); i++) {
 
-            //Get Data for this source
-            Log.e("checkedSoure " +i,checkedSources.get(i).toString());
+            //Get Json Data for this source
             data = downloadUrlData("https://newsapi.org/v1/articles?source=" +
                     checkedSources.get(i) + "&apiKey=bddae599de5041ab9858c74961886e6c");
 
+            //If API Status is "ok" continue
             if (JSONHandling.checkAPIStatus(data)) {
-
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -59,7 +58,6 @@ class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, Arra
                         ImageUrl = JSONHandling.ArrayfromJSONString(data, "articles", "urlToImage");
                         Timestamp = JSONHandling.ArrayfromJSONString(data, "articles", "publishedAt");
                         source = JSONHandling.JsonInfo(data, "source");
-
                     }});
 
                 t.start(); // spawn thread
@@ -70,16 +68,13 @@ class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, Arra
                     e.printStackTrace();
                 }
 
-
                 //Add Arrays from the one downloaded source to Array List with all sources
                 for (int x = 0; x < Title.length; x++) {
-                    Log.e("Timestamp","="+Timestamp[x]);
                     newsArticles.add(new NewsArticle(Title[x], Description[x], Url[x], ImageUrl[x],
                             Timestamp[x], null, source));
                 }
             }
         }
-
         return newsArticles;
     }
 
@@ -87,9 +82,9 @@ class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, Arra
     protected void onPostExecute(ArrayList<NewsArticle> result) {
         mWaveSwipeRefreshLayout.setRefreshing(false);
 
-
+        //If Result is not 0 and invalid:
         if (result.size() > 0) {
-
+            //Sort Array List with all Articles for Timestamp
             Collections.sort(result, new Comparator<NewsArticle>() {
                 @Override
                 public int compare(NewsArticle o1, NewsArticle o2) {
@@ -111,14 +106,12 @@ class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, Arra
                             return 0;
                         }
                     }else{
+                        //If an article has no Timestamp -> stay at position
                         return 0;
                     }
-
                 }
             });
-
             Collections.reverse(result);
-
         }
 
         //Sort For Titles

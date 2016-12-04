@@ -1,5 +1,9 @@
 package de.ricoklimpel.newslink;
 
+import android.content.Context;
+import android.graphics.Point;
+import android.view.Display;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,5 +33,4 @@ public class Utils {
         }
         return date;
     }
-
 }

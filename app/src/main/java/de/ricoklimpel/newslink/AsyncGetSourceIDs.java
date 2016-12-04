@@ -1,11 +1,11 @@
 package de.ricoklimpel.newslink;
 
-import java.util.concurrent.ExecutionException;
-
 import static de.ricoklimpel.newslink.DownloadWebContent.downloadUrlData;
-import static de.ricoklimpel.newslink.MainActivity.SourceIDs;
 import static de.ricoklimpel.newslink.MainActivity.mWaveSwipeRefreshLayout;
 
+/**
+ * This AsyncTask get all SourceID's from API
+ */
 class AsyncGetSourceIDs extends android.os.AsyncTask<String, Void, String[]>{
 
     @Override
@@ -29,10 +29,8 @@ class AsyncGetSourceIDs extends android.os.AsyncTask<String, Void, String[]>{
     @Override
     protected void onPostExecute(String[] result) {
         mWaveSwipeRefreshLayout.setRefreshing(false);
-
         AsyncGetSelectedSources btask = new AsyncGetSelectedSources();
         btask.executeOnExecutor(AsyncGetSelectedSources.THREAD_POOL_EXECUTOR,result);
-
     }
 
 }

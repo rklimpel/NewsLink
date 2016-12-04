@@ -20,11 +20,11 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
 
     /**
      *
-     *Download Task in Background,
-     *Calls the API with URL from Argument
+     *Return an String from a URL in Background job
      *
-     * @param urls
-     * @return
+     * @param urls url to recieve data from
+     * @return String with (mostly) json document
+     *
      */
     @Override
     protected synchronized String doInBackground(String... urls) {
@@ -85,6 +85,7 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
 
     /**
      * Download String from Argument URL
+     * Helper for openeing Async task with less code and get callback
      *
      * @param url
      * @return

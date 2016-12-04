@@ -1,17 +1,21 @@
 package de.ricoklimpel.newslink;
 
 import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
-import static de.ricoklimpel.newslink.DownloadWebContent.downloadUrlData;
-import static de.ricoklimpel.newslink.MainActivity.SourceIDs;
 import static de.ricoklimpel.newslink.MainActivity.context;
 import static de.ricoklimpel.newslink.MainActivity.mWaveSwipeRefreshLayout;
 import static de.ricoklimpel.newslink.SourcesRecycleAdapter.PREFSNAME;
 
+/**
+ * This AsyncTask compares the List of all Sources with the Users checked Soures from
+ * Shared Preferences
+ *
+ * return ArrayList with the SourceIDs of all checkd Sources
+ */
 class AsyncGetSelectedSources extends android.os.AsyncTask<String[], Void, ArrayList<String>>{
+
+    public static String[] SourceIDs;
 
     @Override
     protected void onPreExecute() {
@@ -20,15 +24,16 @@ class AsyncGetSelectedSources extends android.os.AsyncTask<String[], Void, Array
 
     @Override
     protected synchronized ArrayList<String> doInBackground(String[]... urls) {
-        Boolean[] checkedSources = null;
+        Boolean[] checkedSources;
         String[]allsources = urls[0];
+        SourceIDs = urls[0];
 
         //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
         checkedSources = LocalStorage.StringToBoolArray(
                 LocalStorage.loadArray(PREFSNAME, context));
 
+        //If it is the First Start and there are no Shared Preferences create Prefs with all false
         if (checkedSources.length==0) {
-            //If there is no data saved in shared preferences init first dataset:
             checkedSources = new Boolean[allsources.length];
             for (int i = 0; i < checkedSources.length; i++) {
                 checkedSources[i] = false;
@@ -46,24 +51,14 @@ class AsyncGetSelectedSources extends android.os.AsyncTask<String[], Void, Array
                 Log.e("checkedSources ", SourceIDs[i]);
             }
         }
-
-        for (int i = 0; i < activeSources.size(); i++) {
-            Log.e("checked Sources "+ i,activeSources.get(i));
-
-        }
-        Log.e("Size",activeSources.size()+"");
-
         return activeSources;
     }
 
     @Override
     protected void onPostExecute(ArrayList<String> result) {
         mWaveSwipeRefreshLayout.setRefreshing(false);
-
-        ArrayList<NewsArticle> asdf = new ArrayList<>();
         AsyncGetArticle ctask = new AsyncGetArticle();
         ctask.executeOnExecutor(AsyncGetArticle.THREAD_POOL_EXECUTOR,result);
-
     }
 
 }

@@ -78,7 +78,8 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         holder.textView.setText(TitleValues[position]);
 
         //Set Image
-        Picasso.with(context).load(imageURLs[position]).into(holder.ivNewsImage);
+        //Picasso.with(context).load(imageURLs[position]).into(holder.ivNewsImage);
+        Picasso.with(context).load(imageURLs[position]).fit().centerCrop().into(holder.ivNewsImage);
 
         //Set Timestamp
         holder.tvTimestamp.setText(readableTimestamp(timestamps[position]));
@@ -135,5 +136,6 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
 
         return readable;
     }
+
 }
 

@@ -89,7 +89,7 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
 
         //Set Image
         Picasso.with(context).load(logoURLS[position]).into(holder.iv_logo);
-
+        //Picasso.with(context).load(logoURLS[position]).fit().into(holder.iv_logo);
 
         //Set checked if Arrays had saved checkd state
         if (checkedSources[position]){

@@ -15,6 +15,9 @@ import java.util.Date;
  */
 public class NewsArticle implements Comparable<NewsArticle>{
 
+    /**
+     * NewsArticle Values
+     */
     String title;
     String description;
     String url;
@@ -42,6 +45,7 @@ public class NewsArticle implements Comparable<NewsArticle>{
     public NewsArticle(String title,String description,String url,String imageUrl,
                        String timestamp,String author,String source){
 
+        //Save Arguments from construktor to class
         this.title = title;
         this.description = description;
         this.url = url;

@@ -9,21 +9,22 @@
         android:id="@+id/subject_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="14dp"
         android:layout_marginBottom="7dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         android:layout_gravity="left"
         android:textStyle="bold"
         android:textSize="16dp"
-        android:textColor="@color/titleText"
-        android:textAlignment="center" />
+        android:textColor="@color/titleText" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:layout_gravity="center"
         android:id="@+id/iv_newsimage"
         android:layout_marginTop="7dp"
-        android:layout_marginBottom="7dp" />
+        android:layout_marginBottom="7dp"
+        android:layout_height="150dp" />
 
     <TextView
         android:id="@+id/description_textview"
@@ -31,12 +32,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
         android:layout_marginBottom="7dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         android:layout_gravity="left"
         android:textSize="14dp"
         android:textStyle="normal"
         android:textColor="@color/secondaryText"
-        android:textAlignment="center"
         />
 
     <ImageView
@@ -56,6 +57,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_source"
             android:layout_gravity="left"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:textStyle="normal"
             android:textSize="14dp"
             android:textColor="@color/secondaryText"/>
@@ -65,6 +68,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_timestamp"
             android:layout_gravity="right"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:textStyle="normal"
             android:textSize="14dp"
             android:textColor="@color/secondaryText"

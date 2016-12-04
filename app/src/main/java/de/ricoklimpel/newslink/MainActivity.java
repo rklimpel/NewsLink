@@ -7,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,13 +15,9 @@ import android.util.Log;
 import android.view.Display;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.mxn.soul.flowingdrawer_core.FlowingView;
 import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.concurrent.ExecutionException;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
@@ -40,12 +35,6 @@ public class MainActivity extends AppCompatActivity {
     static RelativeLayout relativeLayout;
     static RecyclerView.Adapter recyclerViewAdapter;
     static RecyclerView.LayoutManager recylerViewLayoutManager;
-
-    /**
-     * Write a List of all API Sources ID's in SourceIDs and filter them
-     * with checkedSources which will be loaded from Shared Preferences
-     */
-    public static String[] SourceIDs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Init Swipe Refresh Layout
+     *
      * On Pulldown refresh newslist
      */
     private void initSwipeRefresh() {
@@ -98,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Init the left side elastic Drawer Layout and set it's Fragment
-     * <p>
+     *
      * In it you can see complete news sources
      * On Open -> Sidemneu Fragment
      */
@@ -116,7 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * initializes the RecyclerView with News Data in the Main Window
-     * Will be called after every reload and build a new List
+     * should be called every time we get new Data
+     *
+     * splits the newsArticle Object in Arrays for each component
      *
      * @param newsArticles
      */
@@ -180,44 +172,31 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Refeshing NewsList
+     *
+     * Open Async GetSourceIDs
+     * => this one will get All Source ID'S from the API and
+     * open Async GetSelectedSources
+     * =>  this one will get users selection of sources from Shared Preferences and create an
+     * ArrayList with alle the selected source ID'S
+     * open Async Get Article
+     * => this one will get all Articles for each of the selected sources
+     *
+     * this method starts the process i described here
+     *
      */
     public static void reload() {
 
         AsyncGetSourceIDs atask = new AsyncGetSourceIDs();
         atask.executeOnExecutor(AsyncGetSourceIDs.THREAD_POOL_EXECUTOR);
-        try {
-            SourceIDs = atask.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        /*ArrayList<String> qwer = new ArrayList<>();
-        AsyncGetSelectedSources btask = new AsyncGetSelectedSources();
-        btask.executeOnExecutor(AsyncGetSelectedSources.THREAD_POOL_EXECUTOR,SourceIDs);
-        try {
-            qwer = btask.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }*/
-
-        /*ArrayList<NewsArticle> asdf = new ArrayList<>();
-        AsyncGetArticle ctask = new AsyncGetArticle();
-        ctask.executeOnExecutor(AsyncGetArticle.THREAD_POOL_EXECUTOR,qwer);
-        try {
-            asdf = ctask.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }*/
-
 
     }
 
+    /**
+     *
+     * Get Screen Dimensions in Pixels as Array
+     *
+     * @return [0] = width , [1] = height
+     */
     public int[] getScreenSize(){
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -228,24 +207,3 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-            /*
-            //Sort For Titles
-            Collections.sort(newsArticles, new Comparator<NewsArticle>() {
-                @Override
-                public int compare(NewsArticle o1, NewsArticle o2) {
-                    String a=o1.getTitle();
-                    String b = o2.getTitle();
-                    int compare = a.compareTo(b);
-                    if (compare < 0)
-                    {
-                        return +1;
-                    }
-                    else
-                    {
-                        if (compare > 0)
-
-                            return -1;
-                    }
-                    return 0;
-            }
-            });*/
