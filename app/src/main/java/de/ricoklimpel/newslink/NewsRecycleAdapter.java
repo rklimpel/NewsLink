@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -49,6 +51,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         public ImageView ivNewsImage;
         public TextView tvTimestamp;
         public TextView tvSource;
+        public ProgressBar pbNewsimage;
 
         public ViewHolder(View v) {
 
@@ -59,6 +62,10 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
             ivNewsImage = (ImageView) v.findViewById(R.id.iv_newsimage);
             tvTimestamp = (TextView)v.findViewById(R.id.tv_timestamp);
             tvSource = (TextView)v.findViewById(R.id.tv_source);
+            pbNewsimage = (ProgressBar)v.findViewById(R.id.pb_newsimage);
+
+            ivNewsImage.setVisibility(View.INVISIBLE);
+            pbNewsimage.setVisibility(View.VISIBLE);
         }
     }
 
@@ -72,14 +79,26 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         //Set Title
         holder.textView.setText(TitleValues[position]);
 
         //Set Image
         //Picasso.with(context).load(imageURLs[position]).into(holder.ivNewsImage);
-        Picasso.with(context).load(imageURLs[position]).fit().centerCrop().into(holder.ivNewsImage);
+        Picasso.with(context).load(imageURLs[position]).fit().centerCrop()
+                .into(holder.ivNewsImage, new Callback() {
+            @Override
+            public void onSuccess() {
+                holder.ivNewsImage.setVisibility(View.VISIBLE);
+                holder.pbNewsimage.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
 
         //Set Timestamp
         holder.tvTimestamp.setText(readableTimestamp(timestamps[position]));
