@@ -101,7 +101,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         });
 
         //Set Timestamp
-        holder.tvTimestamp.setText(readableTimestamp(timestamps[position]));
+        holder.tvTimestamp.setText(Utils.getTimeFromTimestamp(timestamps[position]));
 
         //Set Description
         holder.tvDescription.setText(DescriptionValues[position]);

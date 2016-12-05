@@ -3,6 +3,7 @@ package de.ricoklimpel.newslink;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
         }
+
+
     }
 
     /**

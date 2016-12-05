@@ -26,6 +26,7 @@ public class NewsArticle implements Comparable<NewsArticle>{
     String author;
     String source;
     Date datetimestamp;
+    NewsSource newsSource;
 
     public NewsArticle(){
         new NewsArticle(null,null,null,null,null,null,null);
@@ -111,6 +112,14 @@ public class NewsArticle implements Comparable<NewsArticle>{
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public NewsSource getNewsSource() {
+        return newsSource;
+    }
+
+    public void setNewsSource(NewsSource newsSource) {
+        this.newsSource = newsSource;
     }
 
     public Date getDatetimestamp() {
