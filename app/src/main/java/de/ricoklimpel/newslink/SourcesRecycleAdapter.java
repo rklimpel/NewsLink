@@ -12,14 +12,15 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 /**
  * Created by ricoklimpel on 02.12.16.
  */
 
 public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAdapter.ViewHolder> {
 
-    String[] TitleValues;
-    String[] logoURLS;
+    ArrayList<NewsSource> newsSources;
 
     public static final String PREFSNAME = "checkedSources";
 
@@ -34,9 +35,9 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
     View view1;
     SourcesRecycleAdapter.ViewHolder viewHolder1;
 
-    public SourcesRecycleAdapter(Context context1, String[] SubjectValues1, String[] LogoURLS) {
-        this.logoURLS = LogoURLS;
-        this.TitleValues = SubjectValues1;
+    public SourcesRecycleAdapter(Context context1, ArrayList<NewsSource> newsSources) {
+
+        this.newsSources = newsSources;
         this.context = context1;
 
         checkedSources = null;
@@ -45,7 +46,7 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         checkedSources = LocalStorage.StringToBoolArray(LocalStorage.loadArray(PREFSNAME, context));
         if (checkedSources.length == 0) {
             //If there is no data saved in shared preferences init first dataset:
-            checkedSources = new Boolean[TitleValues.length];
+            checkedSources = new Boolean[newsSources.size()];
             for (int i = 0; i < checkedSources.length; i++) {checkedSources[i] = false;
             }
             //Save Checked Items to Shared Preferences
@@ -83,11 +84,10 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         //Set Source Name
-        holder.textView.setText(TitleValues[position]);
+        holder.textView.setText(newsSources.get(position).getSourceName());
 
         //Set Image
-        Picasso.with(context).load(logoURLS[position]).into(holder.iv_logo);
-        //Picasso.with(context).load(logoURLS[position]).fit().into(holder.iv_logo);
+        Picasso.with(context).load(newsSources.get(position).getUrlLogo()[0]).into(holder.iv_logo);
 
         //Set checked if Arrays had saved checkd state
         if (checkedSources[position]){
@@ -153,6 +153,6 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
     @Override
     public int getItemCount() {
 
-        return TitleValues.length;
+        return newsSources.size();
     }
 }

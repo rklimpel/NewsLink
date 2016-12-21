@@ -18,7 +18,22 @@ public class NewsSource {
     String[] urlLogo;
     Boolean[] sortAvailable;
 
-    public NewsSource(){
+    public NewsSource(String sourceID){
+        new NewsSource(sourceID,null,null,null,null,null,null,null);
+    }
+
+    public NewsSource(String sourceID, String sourceName, String description,
+                String url, String category, String language, String country,
+                      String[] urlLogo){
+
+        this.sourceID = sourceID;
+        this.sourceName = sourceName;
+        this.description = description;
+        this.url = url;
+        this.category = category;
+        this.language = language;
+        this.country = country;
+        this.urlLogo = urlLogo;
 
     }
 
@@ -93,4 +108,5 @@ public class NewsSource {
     public void setSortAvailable(Boolean[] sortAvailable) {
         this.sortAvailable = sortAvailable;
     }
+
 }

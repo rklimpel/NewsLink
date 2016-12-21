@@ -18,7 +18,7 @@ import static de.ricoklimpel.newslink.MainActivity.mWaveSwipeRefreshLayout;
  * at the end he calls the Recyclerview initiator from MainActivity to wirte news in NewsList
  *
  */
-class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, ArrayList<NewsArticle>>{
+public class AsyncGetArticle extends android.os.AsyncTask<ArrayList<NewsSource>, Void, ArrayList<NewsArticle>>{
 
     String data;
     String[] Title;
@@ -28,26 +28,29 @@ class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, Arra
     String[] Timestamp;
     String source;
 
+
     @Override
     protected void onPreExecute() {
         mWaveSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
-    protected synchronized ArrayList<NewsArticle> doInBackground(ArrayList<String>... urls) {
+    protected synchronized ArrayList<NewsArticle> doInBackground(ArrayList<NewsSource>... paramNewsSources) {
 
-        ArrayList<NewsArticle> newsArticles = new ArrayList<>();
+        final ArrayList<NewsArticle> newsArticles = new ArrayList<>();
         newsArticles.clear();
-        ArrayList<String>checkedSources = urls[0];
+
+        ArrayList<NewsSource>checkedSources = paramNewsSources[0];
 
         for (int i = 0; i < checkedSources.size(); i++) {
 
             //Get Json Data for this source
             data = downloadUrlData("https://newsapi.org/v1/articles?source=" +
-                    checkedSources.get(i) + "&apiKey=bddae599de5041ab9858c74961886e6c");
+                    checkedSources.get(i).getSourceID() + "&apiKey=bddae599de5041ab9858c74961886e6c");
 
             //If API Status is "ok" continue
             if (JSONHandling.checkAPIStatus(data)) {
+
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -58,6 +61,7 @@ class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, Arra
                         ImageUrl = JSONHandling.ArrayfromJSONString(data, "articles", "urlToImage");
                         Timestamp = JSONHandling.ArrayfromJSONString(data, "articles", "publishedAt");
                         source = JSONHandling.JsonInfo(data, "source");
+
                     }});
 
                 t.start(); // spawn thread
@@ -71,7 +75,7 @@ class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, Arra
                 //Add Arrays from the one downloaded source to Array List with all sources
                 for (int x = 0; x < Title.length; x++) {
                     newsArticles.add(new NewsArticle(Title[x], Description[x], Url[x], ImageUrl[x],
-                            Timestamp[x], null, source));
+                            Timestamp[x], null, source,checkedSources.get(i)));
                 }
             }
         }
@@ -134,6 +138,7 @@ class AsyncGetArticle extends android.os.AsyncTask<ArrayList<String>, Void, Arra
         Collections.reverse(result);*/
 
         initRecyclerView(result);
+
     }
 
 }

@@ -29,7 +29,7 @@ public class NewsArticle implements Comparable<NewsArticle>{
     NewsSource newsSource;
 
     public NewsArticle(){
-        new NewsArticle(null,null,null,null,null,null,null);
+        new NewsArticle(null,null,null,null,null,null,null,null);
     }
 
     /**
@@ -44,7 +44,7 @@ public class NewsArticle implements Comparable<NewsArticle>{
      * @param source
      */
     public NewsArticle(String title,String description,String url,String imageUrl,
-                       String timestamp,String author,String source){
+                       String timestamp,String author,String source, NewsSource newsSource){
 
         //Save Arguments from construktor to class
         this.title = title;
@@ -54,6 +54,7 @@ public class NewsArticle implements Comparable<NewsArticle>{
         this.timestamp = timestamp;
         this.author = author;
         this.source = source;
+        this.newsSource = newsSource;
 
         this.setDatetimestamp(timestamp);
     }

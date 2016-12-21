@@ -1,12 +1,26 @@
 package de.ricoklimpel.newslink;
 
+import java.util.ArrayList;
+
 import static de.ricoklimpel.newslink.DownloadWebContent.downloadUrlData;
 import static de.ricoklimpel.newslink.MainActivity.mWaveSwipeRefreshLayout;
+import static de.ricoklimpel.newslink.MainActivity.*;
 
 /**
  * This AsyncTask get all SourceID's from API
  */
-class AsyncGetSourceIDs extends android.os.AsyncTask<String, Void, String[]>{
+public class AsyncGetSourceIDs extends android.os.AsyncTask<Object, Object, ArrayList<NewsSource>> {
+
+    String[] sourceID;
+    String[] sourceName;
+    String[] description;
+    String[] url;
+    String[] category;
+    String[] language;
+    String[] country;
+    String[] urlLogoSmall;
+    String[] urlLogoMedium;
+    String[] urlLogoLarge;
 
     @Override
     protected void onPreExecute() {
@@ -14,12 +28,34 @@ class AsyncGetSourceIDs extends android.os.AsyncTask<String, Void, String[]>{
     }
 
     @Override
-    protected synchronized String[] doInBackground(String... urls) {
+    protected synchronized ArrayList<NewsSource> doInBackground(Object... urls) {
+
         String Url = "https://newsapi.org/v1/sources?language=";
         String data = downloadUrlData(Url);
 
+        ArrayList<NewsSource> newsSources = new ArrayList<>();
+
         if (JSONHandling.checkAPIStatus(data)) {
-            return JSONHandling.ArrayfromJSONString(data, "sources", "id");
+
+            sourceID = JSONHandling.ArrayfromJSONString(data, "sources", "id");
+            sourceName = JSONHandling.ArrayfromJSONString(data, "sources", "name");
+            description = JSONHandling.ArrayfromJSONString(data, "sources" , "description");
+            url = JSONHandling.ArrayfromJSONString(data,"sources","url");
+            category = JSONHandling.ArrayfromJSONString(data,"sources","category");
+            language = JSONHandling.ArrayfromJSONString(data,"sources","language");
+            country = JSONHandling.ArrayfromJSONString(data,"sources","country");
+            urlLogoSmall = JSONHandling.ArrayfromJSONString(data, "sources","urlsToLogos","small");
+            urlLogoMedium = JSONHandling.ArrayfromJSONString(data, "sources","urlsToLogos","medium");
+            urlLogoLarge = JSONHandling.ArrayfromJSONString(data, "sources" , "urlsToLogos","large");
+
+            for (int i = 0; i < sourceID.length; i++) {
+                newsSources.add(new NewsSource(sourceID[i],sourceName[i],description[i],url[i],category[i],
+                        language[i],country[i],new String[]{urlLogoSmall[i],
+                                                            urlLogoMedium[i],
+                                                            urlLogoLarge[i]}));
+            }
+
+            return newsSources;
 
         } else {
             return null;
@@ -27,8 +63,14 @@ class AsyncGetSourceIDs extends android.os.AsyncTask<String, Void, String[]>{
     }
 
     @Override
-    protected void onPostExecute(String[] result) {
+    protected void onPostExecute(ArrayList<NewsSource> result) {
+
         mWaveSwipeRefreshLayout.setRefreshing(false);
+
+        MainActivity.newsSources = result;
+
+        MainActivity.initDrawerLayout();
+
         AsyncGetSelectedSources btask = new AsyncGetSelectedSources();
         btask.executeOnExecutor(AsyncGetSelectedSources.THREAD_POOL_EXECUTOR,result);
     }

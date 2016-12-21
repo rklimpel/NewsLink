@@ -79,12 +79,7 @@ public class SidemenuFragment extends MenuFragment {
      */
     public static void initRecyclerView(){
 
-        final String stringUrl = "https://newsapi.org/v1/sources?language=";
-        String downloadData = downloadUrlData(stringUrl);
-
-        recyclerViewAdapter = new SourcesRecycleAdapter(view.getContext(),
-                JSONHandling.ArrayfromJSONString(downloadData,"sources","name"),
-                JSONHandling.ArrayfromJSONString(downloadData,"sources","urlsToLogos","small"));
+        recyclerViewAdapter = new SourcesRecycleAdapter(view.getContext(),MainActivity.newsSources);
 
         recyclerView.setAdapter(recyclerViewAdapter);
     }

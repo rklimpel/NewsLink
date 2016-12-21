@@ -113,9 +113,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/iv_sourceImage"
+                android:background="#FFFFFF"
+                android:maxHeight="45dp"
+                android:maxWidth="120dp"
+                android:adjustViewBounds="true"
                 android:layout_gravity="left"
                 android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"/>
+                android:layout_marginRight="4dp"
+                android:layout_centerInParent="true"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -127,7 +132,6 @@
                 android:textStyle="normal"
                 android:textSize="14dp"
                 android:textColor="@color/secondaryText"
-                android:text="asdfasdf"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/iv_sourceImage" />
 

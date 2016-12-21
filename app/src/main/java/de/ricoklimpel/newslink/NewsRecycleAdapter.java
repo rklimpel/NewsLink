@@ -16,35 +16,22 @@ import com.squareup.picasso.Picasso;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 
 public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.ViewHolder> {
 
-    String[] TitleValues;
-    String[] DescriptionValues;
-    String[] Links;
-    String[] imageURLs;
-    String[] timestamps;
-    String[] sources;
-    String[] sourceLogoUrls;
+    ArrayList<NewsArticle> newsArticles;
     Context context;
     View view1;
     ViewHolder viewHolder1;
 
-    public NewsRecycleAdapter(Context context1, String[] SubjectValues1, String[] DescriptionValues,
-                              String[] Links, String[] ImageUrls,String[]timestamps,String[] source,
-                              String[] sourceLogoUrls) {
+    public NewsRecycleAdapter(Context context, ArrayList<NewsArticle> newsArticles) {
 
-        this.imageURLs = ImageUrls;
-        this.Links = Links;
-        this.DescriptionValues = DescriptionValues;
-        this.TitleValues = SubjectValues1;
-        this.timestamps = timestamps;
-        this.context = context1;
-        this.sources = source;
-        this.sourceLogoUrls = sourceLogoUrls;
+        this.context = context;
+        this.newsArticles = newsArticles;
 
     }
 
@@ -89,11 +76,11 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         //Set Title
-        holder.textView.setText(TitleValues[position]);
+        holder.textView.setText(newsArticles.get(position).title);
 
         //Set Image
         //Picasso.with(context).load(imageURLs[position]).into(holder.ivNewsImage);
-        Picasso.with(context).load(imageURLs[position]).fit().centerCrop()
+        Picasso.with(context).load(newsArticles.get(position).getImageUrl()).fit().centerCrop()
                 .into(holder.ivNewsImage, new Callback() {
             @Override
             public void onSuccess() {
@@ -108,25 +95,29 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         });
 
         //Set Timestamp
-        holder.tvTimestamp.setText(Utils.getTimeFromTimestamp(timestamps[position]));
+        holder.tvTimestamp.setText(Utils.getTimeFromTimestamp(newsArticles.get(position).getTimestamp()));
 
         //Set Description
-        holder.tvDescription.setText(DescriptionValues[position]);
+        holder.tvDescription.setText(newsArticles.get(position).getDescription());
 
         //Set Source Name
-        holder.tvSource.setText(sources[position]);
+        //holder.tvSource.setText(newsArticles.get(position).getNewsSource().getSourceName());
+
+        //Set Source Image
+        Picasso.with(context).load(newsArticles.get(position).getNewsSource().getUrlLogo()[0])
+                .into(holder.ivSourceLogo);
 
         //Set OnClick Listeners for WebView
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.openWebrowser(Links[position]);
+                MainActivity.openWebrowser(newsArticles.get(position).getUrl());
             }
         });
         holder.ivNewsImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.openWebrowser(Links[position]);
+                MainActivity.openWebrowser(newsArticles.get(position).getUrl());
             }
         });
 
@@ -135,7 +126,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     @Override
     public int getItemCount() {
 
-        return TitleValues.length;
+        return newsArticles.size();
     }
 
     /**

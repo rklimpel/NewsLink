@@ -14,12 +14,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.mxn.soul.flowingdrawer_core.FlowingView;
 import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Pulldown to refresh Layout
     public static WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
+
+    public static ArrayList<NewsSource> newsSources;
 
     //Save Context for static usage
     static Context context;
@@ -36,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
     static RelativeLayout relativeLayout;
     static RecyclerView.Adapter recyclerViewAdapter;
     static RecyclerView.LayoutManager recylerViewLayoutManager;
+
+    static LeftDrawerLayout mLeftDrawerLayout;
+    static SidemenuFragment mMenuFragment;
+    static FragmentManager fm;
+    static FlowingView mFlowingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +57,14 @@ public class MainActivity extends AppCompatActivity {
         recylerViewLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(recylerViewLayoutManager);
 
-        //Init Side and Refresh View
-        initDrawerLayout();
         initSwipeRefresh();
+
+        mLeftDrawerLayout = (LeftDrawerLayout)findViewById(R.id.id_drawerlayout);
+        fm = getSupportFragmentManager();
+        mMenuFragment = (SidemenuFragment) fm.findFragmentById(R.id.id_container_menu);
+        mFlowingView = (FlowingView)findViewById(R.id.sv);
+
+
 
         //If Network is Ok first time download news list
         if (checkNetwork()) {
@@ -59,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
         }
+
+
 
 
     }
@@ -95,11 +110,8 @@ public class MainActivity extends AppCompatActivity {
      * In it you can see complete news sources
      * On Open -> Sidemneu Fragment
      */
-    private void initDrawerLayout() {
-        LeftDrawerLayout mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
-        FragmentManager fm = getSupportFragmentManager();
-        SidemenuFragment mMenuFragment = (SidemenuFragment) fm.findFragmentById(R.id.id_container_menu);
-        FlowingView mFlowingView = (FlowingView) findViewById(R.id.sv);
+    public static void initDrawerLayout() {
+
         if (mMenuFragment == null) {
             fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new SidemenuFragment()).commit();
         }
@@ -117,30 +129,11 @@ public class MainActivity extends AppCompatActivity {
      */
     public static void initRecyclerView(ArrayList<NewsArticle> newsArticles) {
 
-        String[] titles = new String[newsArticles.size()];
-        String[] descriptions = new String[newsArticles.size()];
-        String[] urls = new String[newsArticles.size()];
-        String[] imageurls = new String[newsArticles.size()];
-        String[] timestamps = new String[newsArticles.size()];
-        String[] sources = new String[newsArticles.size()];
-
-        for (int i = 0; i < newsArticles.size(); i++) {
-
-            NewsArticle newsarticle;
-            newsarticle = newsArticles.get(i);
-
-            titles[i] = newsarticle.getTitle();
-            descriptions[i] = newsarticle.getDescription();
-            urls[i] = newsarticle.getUrl();
-            imageurls[i] = newsarticle.getImageUrl();
-            timestamps[i] = newsarticle.getTimestamp();
-            sources[i] = newsarticle.getSource();
-        }
-
         mWaveSwipeRefreshLayout.setRefreshing(false);
 
-        recyclerViewAdapter = new NewsRecycleAdapter(context, titles, descriptions, urls, imageurls, timestamps, sources);
+        recyclerViewAdapter = new NewsRecycleAdapter(context, newsArticles);
         recyclerView.setAdapter(recyclerViewAdapter);
+
     }
 
     /**
