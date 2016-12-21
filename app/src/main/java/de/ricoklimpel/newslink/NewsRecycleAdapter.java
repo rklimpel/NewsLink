@@ -28,12 +28,14 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
     String[] imageURLs;
     String[] timestamps;
     String[] sources;
+    String[] sourceLogoUrls;
     Context context;
     View view1;
     ViewHolder viewHolder1;
 
     public NewsRecycleAdapter(Context context1, String[] SubjectValues1, String[] DescriptionValues,
-                              String[] Links, String[] ImageUrls,String[]timestamps,String[] source) {
+                              String[] Links, String[] ImageUrls,String[]timestamps,String[] source,
+                              String[] sourceLogoUrls) {
 
         this.imageURLs = ImageUrls;
         this.Links = Links;
@@ -42,6 +44,8 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         this.timestamps = timestamps;
         this.context = context1;
         this.sources = source;
+        this.sourceLogoUrls = sourceLogoUrls;
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -52,6 +56,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         public TextView tvTimestamp;
         public TextView tvSource;
         public ProgressBar pbNewsimage;
+        public ImageView ivSourceLogo;
 
         public ViewHolder(View v) {
 
@@ -63,9 +68,11 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
             tvTimestamp = (TextView)v.findViewById(R.id.tv_timestamp);
             tvSource = (TextView)v.findViewById(R.id.tv_source);
             pbNewsimage = (ProgressBar)v.findViewById(R.id.pb_newsimage);
+            ivSourceLogo = (ImageView)v.findViewById(R.id.iv_sourceImage);
 
             ivNewsImage.setVisibility(View.INVISIBLE);
             pbNewsimage.setVisibility(View.VISIBLE);
+
         }
     }
 
