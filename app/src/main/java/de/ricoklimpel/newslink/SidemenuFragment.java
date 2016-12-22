@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mxn.soul.flowingdrawer_core.MenuFragment;
 
-import static de.ricoklimpel.newslink.DownloadWebContent.*;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -23,6 +21,8 @@ public class SidemenuFragment extends MenuFragment {
     static RecyclerView.LayoutManager recylerViewLayoutManager;
     static View view;
 
+    static Boolean created = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +32,8 @@ public class SidemenuFragment extends MenuFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.sidemenu_fragment, container,
                 false);
+
+        created = true;
 
         recyclerView = (RecyclerView)view.findViewById(R.id.recyclerview1);
         recylerViewLayoutManager = new LinearLayoutManager(view.getContext());

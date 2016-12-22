@@ -3,7 +3,6 @@ package de.ricoklimpel.newslink;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,8 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.mxn.soul.flowingdrawer_core.FlowingView;
@@ -29,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
     //Pulldown to refresh Layout
     public static WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
 
+    //News Sources Lists (static)
     public static ArrayList<NewsSource> newsSources;
+    public static ArrayList<NewsSource> newsSourcesChecked;
 
     //Save Context for static usage
     static Context context;
@@ -63,6 +62,13 @@ public class MainActivity extends AppCompatActivity {
         fm = getSupportFragmentManager();
         mMenuFragment = (SidemenuFragment) fm.findFragmentById(R.id.id_container_menu);
         mFlowingView = (FlowingView)findViewById(R.id.sv);
+
+        newsSources = LocalStorage.LoadNewsSources(this,Utils.PREF_ID_SOFURCES_ALL);
+        newsSourcesChecked = LocalStorage.LoadNewsSources(this, Utils.PREF_ID_SOURCES_CHECKED);
+
+        if(newsSources != null){
+            initDrawerLayout();
+        }
 
 
 
@@ -182,8 +188,16 @@ public class MainActivity extends AppCompatActivity {
      */
     public static void reload() {
 
-        AsyncGetSourceIDs atask = new AsyncGetSourceIDs();
-        atask.executeOnExecutor(AsyncGetSourceIDs.THREAD_POOL_EXECUTOR);
+        if(newsSources==null){
+            AsyncGetSourceIDs atask = new AsyncGetSourceIDs();
+            atask.executeOnExecutor(AsyncGetSourceIDs.THREAD_POOL_EXECUTOR);
+        }else if(newsSourcesChecked == null) {
+            AsyncGetSelectedSources atask = new AsyncGetSelectedSources();
+            atask.executeOnExecutor(AsyncGetSelectedSources.THREAD_POOL_EXECUTOR,newsSources);
+        }else{
+            AsyncGetArticle atask = new AsyncGetArticle();
+            atask.executeOnExecutor(AsyncGetArticle.THREAD_POOL_EXECUTOR,newsSourcesChecked);
+        }
 
     }
 

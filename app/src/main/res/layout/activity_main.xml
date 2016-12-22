@@ -5,6 +5,8 @@
     android:id="@+id/id_drawerlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
+    android:background="@color/mainBackground"
     android:clipChildren="false">
 
     <!--content-->

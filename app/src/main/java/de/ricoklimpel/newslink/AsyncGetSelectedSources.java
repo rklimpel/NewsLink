@@ -60,6 +60,8 @@ public class AsyncGetSelectedSources extends android.os.AsyncTask<ArrayList<News
     @Override
     protected void onPostExecute(ArrayList<NewsSource> result) {
 
+        LocalStorage.SaveNewsSources(context,result,Utils.PREF_ID_SOURCES_CHECKED);
+
         mWaveSwipeRefreshLayout.setRefreshing(false);
         AsyncGetArticle ctask = new AsyncGetArticle();
         ctask.executeOnExecutor(AsyncGetArticle.THREAD_POOL_EXECUTOR,result);

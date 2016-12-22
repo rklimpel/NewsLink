@@ -65,11 +65,11 @@ public class AsyncGetSourceIDs extends android.os.AsyncTask<Object, Object, Arra
     @Override
     protected void onPostExecute(ArrayList<NewsSource> result) {
 
+        LocalStorage.SaveNewsSources(context,result,Utils.PREF_ID_SOFURCES_ALL);
+
         mWaveSwipeRefreshLayout.setRefreshing(false);
 
         MainActivity.newsSources = result;
-
-        MainActivity.initDrawerLayout();
 
         AsyncGetSelectedSources btask = new AsyncGetSelectedSources();
         btask.executeOnExecutor(AsyncGetSelectedSources.THREAD_POOL_EXECUTOR,result);

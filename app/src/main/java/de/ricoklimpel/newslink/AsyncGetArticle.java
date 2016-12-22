@@ -86,6 +86,12 @@ public class AsyncGetArticle extends android.os.AsyncTask<ArrayList<NewsSource>,
     protected void onPostExecute(ArrayList<NewsArticle> result) {
         mWaveSwipeRefreshLayout.setRefreshing(false);
 
+        //IF Sidemenu could not get created on Main Activity start because of missing data,
+        //create it now!
+        if(SidemenuFragment.created == false){
+            MainActivity.initDrawerLayout();
+        }
+
         //If Result is not 0 and invalid:
         if (result.size() > 0) {
             //Sort Array List with all Articles for Timestamp

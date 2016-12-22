@@ -4,6 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 /**
  * Created by ricoklimpel on 02.12.16.
  */
@@ -107,5 +113,39 @@ public class LocalStorage {
         }
 
         return boolArray;
+    }
+
+    public static void SaveNewsArticles(ArrayList<NewsArticle> newsArticles,String name){
+
+    }
+
+    public static ArrayList<NewsArticle> LoadNewsArticles(String name){
+
+        return null;
+    }
+
+    public static void SaveNewsSources(Context context,ArrayList<NewsSource> newsSources,String name){
+
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(newsSources);
+        prefsEditor.putString(name, json);
+        prefsEditor.commit();
+
+    }
+
+    public static ArrayList<NewsSource> LoadNewsSources(Context context, String name){
+
+        SharedPreferences appSharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext());
+        Gson gson = new Gson();
+        String json = appSharedPrefs.getString(name, "");
+
+        Type type = new TypeToken<ArrayList<NewsSource>>(){}.getType();
+        ArrayList<NewsSource> newsSources = gson.fromJson(json, type);
+
+        return newsSources;
     }
 }

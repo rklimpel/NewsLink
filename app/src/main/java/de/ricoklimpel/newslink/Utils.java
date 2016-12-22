@@ -16,6 +16,9 @@ import java.util.Locale;
 
 public class Utils {
 
+    static final String PREF_ID_SOURCES_CHECKED = "checked_sources";
+    static final String PREF_ID_SOFURCES_ALL = "all_sources";
+
     /**
      *
      * Converts ugly API Date to new Date Format
