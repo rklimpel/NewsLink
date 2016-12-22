@@ -63,6 +63,9 @@ public class SidemenuFragment extends MenuFragment {
      *
      */
     public void onCloseMenu(){
+
+        MainActivity.setupCheckedNewsSources();
+
         //Add delay for finishing Closeing Animation, then reload NewsList
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {

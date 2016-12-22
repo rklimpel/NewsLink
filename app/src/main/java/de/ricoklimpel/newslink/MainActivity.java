@@ -215,5 +215,24 @@ public class MainActivity extends AppCompatActivity {
         int height = size.y;
         return new int[]{width,height};
     }
+
+    public static void setupCheckedNewsSources() {
+
+        ArrayList<NewsSource> checkedNewsSources = new ArrayList<>();
+
+        Boolean[] checkedSourcesIDs =  LocalStorage.StringToBoolArray(
+                LocalStorage.loadArray("checkedSources",context));
+
+        if(checkedSourcesIDs.length != 0){
+            for (int i = 0; i < checkedSourcesIDs.length; i++) {
+                if(checkedSourcesIDs[i]){
+                    checkedNewsSources.add(newsSources.get(i));
+                }
+            }
+        }
+
+        newsSourcesChecked = checkedNewsSources;
+
+    }
 }
 

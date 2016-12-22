@@ -1,6 +1,8 @@
 package de.ricoklimpel.newslink;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.view.Display;
 
@@ -87,5 +89,12 @@ public class Utils {
         }
 
         return readable;
+    }
+
+
+    public static Integer getVibrantColor(Bitmap bm){
+
+
+        return 0;
     }
 }

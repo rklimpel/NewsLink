@@ -32,6 +32,8 @@ public class AsyncGetArticle extends android.os.AsyncTask<ArrayList<NewsSource>,
     @Override
     protected void onPreExecute() {
         mWaveSwipeRefreshLayout.setRefreshing(true);
+
+        Log.e("NETWORK","Load News Articles");
     }
 
     @Override

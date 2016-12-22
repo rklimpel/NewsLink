@@ -20,6 +20,8 @@ public class AsyncGetSelectedSources extends android.os.AsyncTask<ArrayList<News
     @Override
     protected void onPreExecute() {
         mWaveSwipeRefreshLayout.setRefreshing(true);
+
+        Log.e("NETWORK","Load Selected Sources");
     }
 
     @Override
