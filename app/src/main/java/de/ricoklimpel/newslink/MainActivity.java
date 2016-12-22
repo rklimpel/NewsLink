@@ -200,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public static void reload() {
 
+        setupCheckedNewsSources();
+
         if(newsSources==null){
             AsyncGetSourceIDs atask = new AsyncGetSourceIDs();
             atask.executeOnExecutor(AsyncGetSourceIDs.THREAD_POOL_EXECUTOR);
