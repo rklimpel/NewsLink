@@ -1,6 +1,8 @@
 package de.ricoklimpel.newslink;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
@@ -44,6 +47,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         public TextView tvSource;
         public ProgressBar pbNewsimage;
         public ImageView ivSourceLogo;
+        public RelativeLayout relayNewsBottom;
 
         public ViewHolder(View v) {
 
@@ -56,6 +60,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
             tvSource = (TextView)v.findViewById(R.id.tv_source);
             pbNewsimage = (ProgressBar)v.findViewById(R.id.pb_newsimage);
             ivSourceLogo = (ImageView)v.findViewById(R.id.iv_sourceImage);
+            relayNewsBottom = (RelativeLayout)v.findViewById(R.id.relay_newsLogoBackground);
 
             ivNewsImage.setVisibility(View.INVISIBLE);
             pbNewsimage.setVisibility(View.VISIBLE);
@@ -79,33 +84,53 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         holder.textView.setText(newsArticles.get(position).title);
 
         //Set Image
-        //Picasso.with(context).load(imageURLs[position]).into(holder.ivNewsImage);
-        Picasso.with(context).load(newsArticles.get(position).getImageUrl()).fit().centerCrop()
-                .into(holder.ivNewsImage, new Callback() {
-            @Override
-            public void onSuccess() {
-                holder.ivNewsImage.setVisibility(View.VISIBLE);
-                holder.pbNewsimage.setVisibility(View.INVISIBLE);
-            }
+        if(newsArticles.get(position).getImageUrl()!= "null"){
+            Picasso.with(context).load(newsArticles.get(position).getImageUrl()).fit().centerCrop()
+                    .into(holder.ivNewsImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.ivNewsImage.setVisibility(View.VISIBLE);
+                            holder.pbNewsimage.setVisibility(View.INVISIBLE);
+                        }
 
-            @Override
-            public void onError() {
+                        @Override
+                        public void onError() {
 
-            }
-        });
+                        }
+                    });
+        }else{
+            holder.ivNewsImage.setVisibility(View.GONE);
+            holder.pbNewsimage.setVisibility(View.GONE);
+        }
+
 
         //Set Timestamp
         holder.tvTimestamp.setText(Utils.getTimeFromTimestamp(newsArticles.get(position).getTimestamp()));
 
         //Set Description
         holder.tvDescription.setText(newsArticles.get(position).getDescription());
+        if(holder.tvDescription.getText()=="null"){
+            holder.tvDescription.setVisibility(View.GONE);
+        }
 
         //Set Source Name
         //holder.tvSource.setText(newsArticles.get(position).getNewsSource().getSourceName());
 
         //Set Source Image
         Picasso.with(context).load(newsArticles.get(position).getNewsSource().getUrlLogo()[0])
-                .into(holder.ivSourceLogo);
+                .into(holder.ivSourceLogo, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        //Set Source Logo Background with Vibrant Color
+                        Bitmap bitmap = ((BitmapDrawable)holder.ivSourceLogo.getDrawable()).getBitmap();
+                        holder.relayNewsBottom.setBackgroundColor(Utils.getVibrantColor(bitmap));
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
 
         //Set OnClick Listeners for WebView
         holder.textView.setOnClickListener(new View.OnClickListener() {

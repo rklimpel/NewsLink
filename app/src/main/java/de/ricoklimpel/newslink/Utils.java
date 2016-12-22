@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.support.v7.graphics.Palette;
 import android.view.Display;
 
 import java.text.DateFormat;
@@ -94,7 +95,9 @@ public class Utils {
 
     public static Integer getVibrantColor(Bitmap bm){
 
+        Palette palette = Palette.from(bm).generate();
+        Integer vibrantcolor = palette.getVibrantColor(Color.WHITE);
+        return vibrantcolor;
 
-        return 0;
     }
 }
