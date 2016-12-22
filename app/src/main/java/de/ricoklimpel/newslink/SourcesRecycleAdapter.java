@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import static de.ricoklimpel.newslink.SidemenuFragment.checkedSources;
+
 /**
  * Created by ricoklimpel on 02.12.16.
  */
@@ -23,13 +25,6 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
     ArrayList<NewsSource> newsSources;
 
     public static final String PREFSNAME = "checkedSources";
-
-    /**
-     * saves which sources are checked and which aren'T
-     * 0 = not set
-     * 1 = checked
-     */
-    Boolean[] checkedSources;
 
     Context context;
     View view1;
@@ -50,7 +45,7 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
             for (int i = 0; i < checkedSources.length; i++) {checkedSources[i] = false;
             }
             //Save Checked Items to Shared Preferences
-            LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources), PREFSNAME, context);
+            //LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources), PREFSNAME, context);
         }
 
     }
@@ -142,7 +137,7 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
         }
 
         //Save Checked Items to Shared Preferences
-        LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources), PREFSNAME, context);
+        //LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources), PREFSNAME, context);
     }
 
     /**

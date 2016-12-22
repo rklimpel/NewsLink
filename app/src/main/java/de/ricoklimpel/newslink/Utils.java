@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.support.v7.graphics.Palette;
 import android.view.Display;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -100,4 +101,5 @@ public class Utils {
         return vibrantcolor;
 
     }
+
 }

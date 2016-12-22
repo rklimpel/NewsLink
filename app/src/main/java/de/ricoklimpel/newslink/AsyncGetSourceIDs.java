@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import static de.ricoklimpel.newslink.DownloadWebContent.downloadUrlData;
 import static de.ricoklimpel.newslink.MainActivity.mWaveSwipeRefreshLayout;
 import static de.ricoklimpel.newslink.MainActivity.*;
+import static de.ricoklimpel.newslink.SidemenuFragment.checkedSources;
 
 /**
  * This AsyncTask get all SourceID's from API
@@ -68,6 +69,17 @@ public class AsyncGetSourceIDs extends android.os.AsyncTask<Object, Object, Arra
 
     @Override
     protected void onPostExecute(ArrayList<NewsSource> result) {
+
+        //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
+        checkedSources = LocalStorage.StringToBoolArray(LocalStorage.loadArray("checkedSources", context));
+        if (checkedSources.length == 0 && result != null) {
+            //If there is no data saved in shared preferences init first dataset:
+            checkedSources = new Boolean[result.size()];
+            for (int i = 0; i < checkedSources.length; i++) {checkedSources[i] = false;
+            }
+            //Save Checked Items to Shared Preferences
+            LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources), "checkedSources", context);
+        }
 
         LocalStorage.SaveNewsSources(context,result,Utils.PREF_ID_SOFURCES_ALL);
 

@@ -21,6 +21,8 @@ import java.util.ArrayList;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
+import static de.ricoklimpel.newslink.SidemenuFragment.checkedSources;
+
 public class MainActivity extends AppCompatActivity {
 
     //Pulldown to refresh Layout
@@ -63,13 +65,15 @@ public class MainActivity extends AppCompatActivity {
         mMenuFragment = (SidemenuFragment) fm.findFragmentById(R.id.id_container_menu);
         mFlowingView = (FlowingView)findViewById(R.id.sv);
 
+
+        newsSources = new ArrayList<>();
+        newsSourcesChecked = new ArrayList<>();
         newsSources = LocalStorage.LoadNewsSources(this,Utils.PREF_ID_SOFURCES_ALL);
         newsSourcesChecked = LocalStorage.LoadNewsSources(this, Utils.PREF_ID_SOURCES_CHECKED);
 
         if(newsSources != null){
             initDrawerLayout();
         }
-
 
 
         //If Network is Ok first time download news list
@@ -79,8 +83,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
         }
 
-
-
+        //Load Checked Items from Shared Preferences and Store them Back into Boolean Array
+        checkedSources = LocalStorage.StringToBoolArray(LocalStorage.loadArray("checkedSources", context));
+        if (checkedSources.length == 0 && newsSources != null) {
+            //If there is no data saved in shared preferences init first dataset:
+            checkedSources = new Boolean[newsSources.size()];
+            for (int i = 0; i < checkedSources.length; i++) {checkedSources[i] = false;
+            }
+            //Save Checked Items to Shared Preferences
+            LocalStorage.saveArray(LocalStorage.BoolToStringArray(checkedSources), "checkedSources", context);
+        }
 
     }
 
@@ -233,6 +245,21 @@ public class MainActivity extends AppCompatActivity {
 
         newsSourcesChecked = checkedNewsSources;
 
+    }
+
+    public static void setupCheckedNewsSources(Boolean[] checkedSourcesBool){
+
+        ArrayList<NewsSource> checkedNewsSources = new ArrayList<>();
+
+        if(checkedSourcesBool.length != 0){
+            for (int i = 0; i < checkedSourcesBool.length; i++) {
+                if(checkedSourcesBool[i]){
+                    checkedNewsSources.add(newsSources.get(i));
+                }
+            }
+        }
+
+        newsSourcesChecked = checkedNewsSources;
     }
 }
 
