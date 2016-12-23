@@ -10,7 +10,6 @@ import java.util.Comparator;
 
 import static de.ricoklimpel.newslink.DownloadWebContent.downloadUrlData;
 import static de.ricoklimpel.newslink.MainActivity.initRecyclerView;
-import static de.ricoklimpel.newslink.MainActivity.mWaveSwipeRefreshLayout;
 
 /**
  *
@@ -31,8 +30,6 @@ public class AsyncGetArticle extends android.os.AsyncTask<ArrayList<NewsSource>,
 
     @Override
     protected void onPreExecute() {
-        mWaveSwipeRefreshLayout.setRefreshing(true);
-
         Log.e("NETWORK","Load News Articles");
     }
 
@@ -86,7 +83,8 @@ public class AsyncGetArticle extends android.os.AsyncTask<ArrayList<NewsSource>,
 
     @Override
     protected void onPostExecute(ArrayList<NewsArticle> result) {
-        mWaveSwipeRefreshLayout.setRefreshing(false);
+
+        //mWaveSwipeRefreshLayout.setRefreshing(false);
 
         //IF Sidemenu could not get created on Main Activity start because of missing data,
         //create it now!

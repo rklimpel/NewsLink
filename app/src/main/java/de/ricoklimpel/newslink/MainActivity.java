@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,15 +19,12 @@ import android.widget.Toast;
 import com.mxn.soul.flowingdrawer_core.FlowingView;
 import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
 import java.util.ArrayList;
-
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
-
 import static de.ricoklimpel.newslink.SidemenuFragment.checkedSources;
 
 public class MainActivity extends AppCompatActivity {
 
     //Pulldown to refresh Layout
-    public static WaveSwipeRefreshLayout mWaveSwipeRefreshLayout;
+    public static SwipeRefreshLayout mSwipeRefreshLayout;
 
     //News Sources Lists (static)
     public static ArrayList<NewsSource> newsSources;
@@ -102,24 +100,18 @@ public class MainActivity extends AppCompatActivity {
      * On Pulldown refresh newslist
      */
     private void initSwipeRefresh() {
-        mWaveSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.main_swipe);
-        mWaveSwipeRefreshLayout.setWaveColor(getResources().getColor(R.color.colorPrimary));
-        mWaveSwipeRefreshLayout.setMaxDropHeight(getScreenSize()[1]/20*9);
 
-        if (checkNetwork()) {
-            mWaveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-
-                    if (checkNetwork()) {
-                        reload();
-                    } else {
-                        Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
-                    }
-
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.activity_main_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (checkNetwork()) {
+                    reload();
+                } else {
+                    Toast.makeText(context, "No network connection available.", Toast.LENGTH_LONG).show();
                 }
-            });
-        }
+            }
+        });
     }
 
     /**
@@ -147,7 +139,11 @@ public class MainActivity extends AppCompatActivity {
      */
     public static void initRecyclerView(ArrayList<NewsArticle> newsArticles) {
 
-        mWaveSwipeRefreshLayout.setRefreshing(false);
+        //mWaveSwipeRefreshLayout.setRefreshing(false);
+
+        mSwipeRefreshLayout.setRefreshing(false);
+
+
 
         recyclerViewAdapter = new NewsRecycleAdapter(context, newsArticles);
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -199,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     public static void reload() {
+
+        mSwipeRefreshLayout.setRefreshing(true);
 
         setupCheckedNewsSources();
 

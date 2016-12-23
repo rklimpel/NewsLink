@@ -5,7 +5,6 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import static de.ricoklimpel.newslink.DownloadWebContent.downloadUrlData;
-import static de.ricoklimpel.newslink.MainActivity.mWaveSwipeRefreshLayout;
 import static de.ricoklimpel.newslink.MainActivity.*;
 import static de.ricoklimpel.newslink.SidemenuFragment.checkedSources;
 
@@ -27,7 +26,8 @@ public class AsyncGetSourceIDs extends android.os.AsyncTask<Object, Object, Arra
 
     @Override
     protected void onPreExecute() {
-        mWaveSwipeRefreshLayout.setRefreshing(true);
+
+        // mWaveSwipeRefreshLayout.setRefreshing(true);
 
         Log.e("NETWORK","Load News Sources");
     }
@@ -83,7 +83,7 @@ public class AsyncGetSourceIDs extends android.os.AsyncTask<Object, Object, Arra
 
         LocalStorage.SaveNewsSources(context,result,Utils.PREF_ID_SOFURCES_ALL);
 
-        mWaveSwipeRefreshLayout.setRefreshing(false);
+        //mWaveSwipeRefreshLayout.setRefreshing(false);
 
         MainActivity.newsSources = result;
 

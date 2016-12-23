@@ -5,7 +5,6 @@
     android:id="@+id/id_drawerlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
     android:background="@color/mainBackground"
     android:clipChildren="false">
 
@@ -18,24 +17,19 @@
         android:background="@color/mainBackground"
         tools:context="de.ricoklimpel.newslink.MainActivity">
 
-        <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
-            android:id="@+id/main_swipe"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/activity_main_swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerview1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:padding="5dp"
                 android:scrollbars="vertical" />
 
-        </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
-
-        <TextView
-            android:id="@+id/tv_output"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
 

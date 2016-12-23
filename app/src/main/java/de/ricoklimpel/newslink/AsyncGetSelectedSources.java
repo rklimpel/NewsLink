@@ -4,7 +4,6 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import static de.ricoklimpel.newslink.MainActivity.context;
-import static de.ricoklimpel.newslink.MainActivity.mWaveSwipeRefreshLayout;
 import static de.ricoklimpel.newslink.SourcesRecycleAdapter.PREFSNAME;
 
 /**
@@ -19,7 +18,7 @@ public class AsyncGetSelectedSources extends android.os.AsyncTask<ArrayList<News
 
     @Override
     protected void onPreExecute() {
-        mWaveSwipeRefreshLayout.setRefreshing(true);
+        //mWaveSwipeRefreshLayout.setRefreshing(true);
 
         Log.e("NETWORK","Load Selected Sources");
     }
@@ -64,7 +63,8 @@ public class AsyncGetSelectedSources extends android.os.AsyncTask<ArrayList<News
 
         LocalStorage.SaveNewsSources(context,result,Utils.PREF_ID_SOURCES_CHECKED);
 
-        mWaveSwipeRefreshLayout.setRefreshing(false);
+        //mWaveSwipeRefreshLayout.setRefreshing(false);
+
         AsyncGetArticle ctask = new AsyncGetArticle();
         ctask.executeOnExecutor(AsyncGetArticle.THREAD_POOL_EXECUTOR,result);
     }
