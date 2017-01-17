@@ -12,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -20,6 +19,21 @@ import com.mxn.soul.flowingdrawer_core.FlowingView;
 import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
 import java.util.ArrayList;
 import static de.ricoklimpel.newslink.SidemenuFragment.checkedSources;
+
+/**
+ *
+ * TODO - URGENT: add LOGO!
+ * TODO - URGENT: add Text if no news sources are Selected (Tutorial)
+ *
+ * TODO - HIGH: add Date to Timeline time
+ * TODO - HIGH: add ActionBar Button for Menu
+ *
+ * TODO - NORMAL: save Images for News Sources Offline
+ * TODO - NORMAL: Add better link to Browser (link button next to newssources logo
+ *
+ * TODO - OPTIONAL: add countdown for news sources Refresh
+ *
+ */
 
 public class MainActivity extends AppCompatActivity {
 

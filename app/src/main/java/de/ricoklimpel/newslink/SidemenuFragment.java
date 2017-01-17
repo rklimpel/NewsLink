@@ -16,8 +16,6 @@ import com.mxn.soul.flowingdrawer_core.MenuFragment;
 
 import java.util.Arrays;
 
-import static android.R.attr.value;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -73,7 +71,6 @@ public class SidemenuFragment extends MenuFragment {
      * If the Users close the Sidemenu
      * <p>
      * Reload NewsList in MainAcitivty, (maybe there have been Source changes)
-     * //TODO just reload if there have been source changes!
      */
     public void onCloseMenu() {
 
