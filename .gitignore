@@ -21,3 +21,6 @@
 .idea/runConfigurations.xml
 
 \.idea/
+
+/app/src/androidTest
+/app/src/test
