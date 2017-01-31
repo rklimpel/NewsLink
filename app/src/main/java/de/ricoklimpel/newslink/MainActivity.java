@@ -10,13 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(myToolbar);
-        ActionBar actionBar = this.getSupportActionBar();
 
         context = getApplicationContext();
 
@@ -288,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.actionbar, menu);
+        getMenuInflater().inflate(R.menu.actionbar_items_main, menu);
         return true;
     }
 
@@ -303,6 +299,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_info:
+                Intent intent = new Intent(this, InfoActivity.class);
+                startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
