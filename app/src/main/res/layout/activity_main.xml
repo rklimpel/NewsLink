@@ -9,7 +9,8 @@
     android:clipChildren="false">
 
     <!--content-->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/relativelayout1"
         android:layout_width="match_parent"
@@ -22,12 +23,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview1"
+            <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="5dp"
-                android:scrollbars="vertical" />
+                android:layout_height="fill_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:paddingRight="5dp"
+                    android:scrollbars="vertical" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/tv_maininfotext"
+                    android:visibility="gone"
+                    android:textColor="#FFFFFF"
+                    android:text="@string/main_noSourcesSelected"
+                    android:gravity="center_horizontal"
+                    android:layout_margin="50dp" />
+
+            </RelativeLayout>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

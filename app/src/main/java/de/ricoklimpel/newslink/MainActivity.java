@@ -12,28 +12,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.mxn.soul.flowingdrawer_core.FlowingView;
 import com.mxn.soul.flowingdrawer_core.LeftDrawerLayout;
 import java.util.ArrayList;
 import static de.ricoklimpel.newslink.SidemenuFragment.checkedSources;
 
-/**
- *
- * TODO - URGENT: add LOGO!
- * TODO - URGENT: add Text if no news sources are Selected (Tutorial)
- *
- * TODO - HIGH: add Date to Timeline time
- * TODO - HIGH: add ActionBar Button for Menu
- *
- * TODO - NORMAL: save Images for News Sources Offline
- * TODO - NORMAL: Add better link to Browser (link button next to newssources logo
- *
- * TODO - OPTIONAL: add countdown for news sources Refresh
- *
- */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     static SidemenuFragment mMenuFragment;
     static FragmentManager fm;
     static FlowingView mFlowingView;
+
+    static TextView tv_maininfotext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         newsSourcesChecked = new ArrayList<>();
         newsSources = LocalStorage.LoadNewsSources(this,Utils.PREF_ID_SOFURCES_ALL);
         newsSourcesChecked = LocalStorage.LoadNewsSources(this, Utils.PREF_ID_SOURCES_CHECKED);
+
+        tv_maininfotext = (TextView)findViewById(R.id.tv_maininfotext);
 
         if(newsSources != null){
             initDrawerLayout();
@@ -153,14 +146,18 @@ public class MainActivity extends AppCompatActivity {
      */
     public static void initRecyclerView(ArrayList<NewsArticle> newsArticles) {
 
-        //mWaveSwipeRefreshLayout.setRefreshing(false);
-
         mSwipeRefreshLayout.setRefreshing(false);
-
 
 
         recyclerViewAdapter = new NewsRecycleAdapter(context, newsArticles);
         recyclerView.setAdapter(recyclerViewAdapter);
+
+        if(newsSourcesChecked.size()==0){
+            tv_maininfotext.setVisibility(View.VISIBLE);
+        }else{
+            tv_maininfotext.setVisibility(View.GONE);
+        }
+
 
     }
 

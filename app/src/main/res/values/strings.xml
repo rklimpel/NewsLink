@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">NewsLink</string>
+
+    <string name="main_noSourcesSelected">Welcome to NewsLink. Do you just wonder why you can not
+        see anything here? Then just wipe with your finger from the left margin to open the menu
+        with the source sources and select which one you are interested in!</string>
 </resources>
