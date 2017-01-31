@@ -121,6 +121,10 @@ public class AsyncGetArticle extends android.os.AsyncTask<ArrayList<NewsSource>,
                     }
                 }
             });
+
+
+
+
             Collections.reverse(result);
         }
 

@@ -25,6 +25,7 @@ public class SidemenuFragment extends MenuFragment {
     static RecyclerView.Adapter recyclerViewAdapter;
     static RecyclerView.LayoutManager recylerViewLayoutManager;
     static View view;
+    public static Boolean isOpen;
 
 
     /**
@@ -39,7 +40,7 @@ public class SidemenuFragment extends MenuFragment {
     static Boolean created = false;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
     }
 
@@ -54,6 +55,8 @@ public class SidemenuFragment extends MenuFragment {
         recylerViewLayoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(recylerViewLayoutManager);
 
+        isOpen = false;
+
         initRecyclerView();
 
         return setupReveal(view);
@@ -64,6 +67,7 @@ public class SidemenuFragment extends MenuFragment {
      */
     public void onOpenMenu() {
 
+        isOpen = true;
 
     }
 
@@ -73,6 +77,8 @@ public class SidemenuFragment extends MenuFragment {
      * Reload NewsList in MainAcitivty, (maybe there have been Source changes)
      */
     public void onCloseMenu() {
+
+        isOpen = false;
 
         MainActivity.setupCheckedNewsSources();
 

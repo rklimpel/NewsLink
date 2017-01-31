@@ -2,6 +2,7 @@ package de.ricoklimpel.newslink;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,11 +10,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -54,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(myToolbar);
+        ActionBar actionBar = this.getSupportActionBar();
+
         context = getApplicationContext();
 
         relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout1);
@@ -67,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         fm = getSupportFragmentManager();
         mMenuFragment = (SidemenuFragment) fm.findFragmentById(R.id.id_container_menu);
         mFlowingView = (FlowingView)findViewById(R.id.sv);
-
 
         newsSources = new ArrayList<>();
         newsSourcesChecked = new ArrayList<>();
@@ -160,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
     /**
      * Gets called by ListAdapter Class
@@ -271,6 +282,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         newsSourcesChecked = checkedNewsSources;
+    }
+
+    @Override
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.actionbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_newsources:
+                if(!SidemenuFragment.isOpen){
+                    mLeftDrawerLayout.openDrawer();
+                }else{
+                    mLeftDrawerLayout.closeDrawer();
+                }
+                break;
+            case R.id.action_info:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

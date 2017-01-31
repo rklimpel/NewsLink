@@ -1,74 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.mxn.soul.flowingdrawer_core.LeftDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/id_drawerlayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/mainBackground"
-    android:clipChildren="false">
 
-    <!--content-->
-    <RelativeLayout
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <com.mxn.soul.flowingdrawer_core.LeftDrawerLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/relativelayout1"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/id_drawerlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/mainBackground"
-        tools:context="de.ricoklimpel.newslink.MainActivity">
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/activity_main_swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerview1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:paddingRight="5dp"
-                    android:scrollbars="vertical" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/tv_maininfotext"
-                    android:visibility="gone"
-                    android:textColor="#FFFFFF"
-                    android:text="@string/main_noSourcesSelected"
-                    android:gravity="center_horizontal"
-                    android:layout_margin="50dp" />
-
-            </RelativeLayout>
-
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-    </RelativeLayout>
-
-    <!--menu-->
-    <RelativeLayout
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
         android:clipChildren="false">
 
-        <com.mxn.soul.flowingdrawer_core.FlowingView
-            android:id="@+id/sv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
-        <FrameLayout
-            android:id="@+id/id_container_menu"
+        <!--content-->
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/relativelayout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="25dp"/>
+            android:background="@color/mainBackground"
+            tools:context="de.ricoklimpel.newslink.MainActivity">
 
-    </RelativeLayout>
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/activity_main_swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-</com.mxn.soul.flowingdrawer_core.LeftDrawerLayout>
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerview1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:paddingRight="5dp"
+                        android:scrollbars="vertical" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/tv_maininfotext"
+                        android:visibility="gone"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:text="@string/main_noSourcesSelected"
+                        android:gravity="center_horizontal"
+                        android:layout_margin="50dp" />
+
+                </RelativeLayout>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+        </RelativeLayout>
+
+        <!--menu-->
+        <RelativeLayout
+            android:layout_width="280dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:clipChildren="false">
+
+            <com.mxn.soul.flowingdrawer_core.FlowingView
+                android:id="@+id/sv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <FrameLayout
+                android:id="@+id/id_container_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="25dp"/>
+
+        </RelativeLayout>
+
+    </com.mxn.soul.flowingdrawer_core.LeftDrawerLayout>
+
+
+</RelativeLayout>
+

@@ -84,7 +84,9 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         holder.textView.setText(newsArticles.get(position).title);
 
         //Set Image
-        if(newsArticles.get(position).getImageUrl()!= "null"){
+        if(newsArticles.get(position).getImageUrl()!= "null"
+                &&newsArticles.get(position).getImageUrl()!=null
+                &&newsArticles.get(position).getImageUrl()!=""){
             Picasso.with(context).load(newsArticles.get(position).getImageUrl()).fit().centerCrop()
                     .into(holder.ivNewsImage, new Callback() {
                         @Override
