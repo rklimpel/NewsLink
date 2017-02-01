@@ -31,13 +31,27 @@
             android:id="@+id/tv_timestamp"
             android:layout_gravity="right"
             android:textStyle="normal"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textColor="@color/secondaryText"
             android:layout_alignParentEnd="true"
             android:layout_toRightOf="@+id/iv_timepoint"
             android:gravity="center"
             android:layout_alignTop="@id/iv_timepoint"
             android:layout_width="wrap_content" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_datestamp"
+            android:layout_marginTop="6dp"
+            android:layout_gravity="right"
+            android:textStyle="normal|italic"
+            android:textSize="12sp"
+            android:textColor="@color/secondaryText"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/iv_timepoint"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/iv_timepoint" />
 
 
     </RelativeLayout>

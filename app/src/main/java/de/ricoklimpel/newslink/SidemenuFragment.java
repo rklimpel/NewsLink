@@ -73,7 +73,7 @@ public class SidemenuFragment extends MenuFragment {
 
     /**
      * If the Users close the Sidemenu
-     * <p>
+     *
      * Reload NewsList in MainAcitivty, (maybe there have been Source changes)
      */
     public void onCloseMenu() {

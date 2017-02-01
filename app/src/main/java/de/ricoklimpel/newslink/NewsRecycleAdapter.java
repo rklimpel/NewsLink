@@ -44,6 +44,7 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         public TextView tvDescription;
         public ImageView ivNewsImage;
         public TextView tvTimestamp;
+        public TextView tvDatestamp;
         public TextView tvSource;
         public ProgressBar pbNewsimage;
         public ImageView ivSourceLogo;
@@ -61,6 +62,8 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
             pbNewsimage = (ProgressBar)v.findViewById(R.id.pb_newsimage);
             ivSourceLogo = (ImageView)v.findViewById(R.id.iv_sourceImage);
             relayNewsBottom = (RelativeLayout)v.findViewById(R.id.relay_newsLogoBackground);
+            tvDatestamp = (TextView)v.findViewById(R.id.tv_datestamp);
+
 
             ivNewsImage.setVisibility(View.INVISIBLE);
             pbNewsimage.setVisibility(View.VISIBLE);
@@ -108,6 +111,9 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
 
         //Set Timestamp
         holder.tvTimestamp.setText(Utils.getTimeFromTimestamp(newsArticles.get(position).getTimestamp()));
+
+        //Set Datestamp
+        holder.tvDatestamp.setText(Utils.getDateFromTimestamp(newsArticles.get(position).getTimestamp()));
 
         //Set Description
         holder.tvDescription.setText(newsArticles.get(position).getDescription());

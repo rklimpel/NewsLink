@@ -93,6 +93,25 @@ public class Utils {
         return readable;
     }
 
+    public static String getDateFromTimestamp(String timestamp){
+
+        String readable = null;
+        Date date = null;
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        DateFormat outputFormat = new SimpleDateFormat("dd.MM.", Locale.GERMAN);
+
+        try {
+            date = format.parse(timestamp);
+            readable = outputFormat.format(date);
+        } catch (ParseException e) {
+            //ERROR
+        }
+
+        return readable;
+
+    }
+
 
     public static Integer getVibrantColor(Bitmap bm){
 
