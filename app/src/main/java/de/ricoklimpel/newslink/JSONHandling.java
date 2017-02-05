@@ -104,11 +104,16 @@ public class JSONHandling {
     public static Boolean checkAPIStatus(String json) {
 
         String status = null;
-        try {
-            JSONObject obj = new JSONObject(json);
-            status = obj.getString("status");
-        } catch (JSONException e) {
 
+        if(json!=null){
+            try {
+                JSONObject obj = new JSONObject(json);
+                status = obj.getString("status");
+            } catch (JSONException e) {
+
+            }
+        }else{
+            return false;
         }
 
         return (status.contains("ok"));
