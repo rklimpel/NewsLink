@@ -1,5 +1,6 @@
 package de.ricoklimpel.newslink;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     //Save Context for static usage
     static Context context;
 
+    static Activity activity;
+
     //for Sidemenu
     static RecyclerView recyclerView;
     static RelativeLayout relativeLayout;
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         context = getApplicationContext();
+        activity = this;
 
         relativeLayout = (RelativeLayout) findViewById(R.id.relativelayout1);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview1);
@@ -176,12 +181,24 @@ public class MainActivity extends AppCompatActivity {
      */
     public static void openWebrowser(String link) {
 
-        //Open default Webbrowser:
+        /*//Open default Webbrowser:
         String url = link;
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
+        context.startActivity(i);*/
+
+
+        String url = link;
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+
+        builder.setStartAnimations(activity, R.anim.slide_in_left, R.anim.slide_out_left);
+        builder.setExitAnimations(activity, R.anim.slide_in_right , R.anim.slide_out_right);
+
+        CustomTabsIntent customTabsIntent = builder.build();
+
+        customTabsIntent.launchUrl(activity, Uri.parse(url));
+
     }
 
     /**

@@ -21,9 +21,6 @@
         </activity>
 
         <activity android:name=".InfoActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.ricoklimpel.newslink.InfoActivity" />
         </activity>
     </application>
 

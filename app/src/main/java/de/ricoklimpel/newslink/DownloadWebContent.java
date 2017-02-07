@@ -29,6 +29,8 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
     @Override
     protected synchronized String doInBackground(String... urls) {
 
+        Log.d(getClass().getName(),String.valueOf(urls[0]));
+
         // params comes from the execute() call: params[0] is the url.
         try {
 
@@ -90,7 +92,7 @@ class DownloadWebContent extends AsyncTask<String, Void, String> {
      * @param url
      * @return
      */
-    public synchronized static String downloadUrlData(String url){
+    public static String downloadUrlData(String url){
 
         DownloadWebContent download = new DownloadWebContent();
         download.execute(url);
