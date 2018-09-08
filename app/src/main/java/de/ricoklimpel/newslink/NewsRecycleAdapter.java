@@ -116,8 +116,11 @@ public class NewsRecycleAdapter extends RecyclerView.Adapter<NewsRecycleAdapter.
         //Set Source Name
         //holder.tvSource.setText(newsArticles.get(position).getNewsSource().getSourceName());
 
+        Log.e("NEWS SOURCE URL",newsArticles.get(position).getNewsSource().getUrl());
+
         //Set Source Image
-        Picasso.with(context).load(newsArticles.get(position).getNewsSource().getUrlLogo()[0])
+        Picasso.with(context).load("https://icon-locator.herokuapp.com/icon?url="
+                + newsArticles.get(position).getNewsSource().getUrl() + "&size=80..120..200")
                 .into(holder.ivSourceLogo, new Callback() {
                     @Override
                     public void onSuccess() {

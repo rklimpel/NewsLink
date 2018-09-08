@@ -3,6 +3,7 @@ package de.ricoklimpel.newslink;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,11 +79,14 @@ public class SourcesRecycleAdapter extends RecyclerView.Adapter<SourcesRecycleAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
+        Log.e("AAAAA",newsSources.get(position).getUrlLogo()[0]);
+
         //Set Source Name
         holder.textView.setText(newsSources.get(position).getSourceName());
 
         //Set Image
-        Picasso.with(context).load(newsSources.get(position).getUrlLogo()[0]).into(holder.iv_logo);
+        Picasso.with(context).load("https://icon-locator.herokuapp.com/icon?url="
+                + newsSources.get(position).getUrl() + "&size=80").into(holder.iv_logo);
 
         //Set checked if Arrays had saved checkd state
         if (checkedSources[position]){
